@@ -977,8 +977,16 @@ To make the computation tractable and to prevent pathological warping, many cons
 \end{figure}
 
 
+In practice, since DTW has a time complexity of \textit{O($n^2$)}, where \textit{n} is the length of the time-series, various lower-bounding techniques are proposed to speed up DTW distance computation in a large database. The LB\_Keogh lower bounding technique [Keogh et al 2004], for example, speeds up the computation by first taking an approximated distance between the time-series that is both fast to compute and lower bounds the true distance. It would go on to compute the real DTW distance only if this distance turns out to be smaller than the best-so-far, since there is no way in this case that the true distance is even smaller than the best so far. This makes DTW essentially an \textit{O($n$)} algorithm as we rarely have to do a full DTW calculation. The general approach is illustrated in \figref{fig:lbk}. This approach can be used in many applications that require DTW, such as exact motif search (see below discussion) and k-means clustering, where for each data point one needs to find its closest centroid. 
 
 
+%a figure
+\begin{figure}
+ \centerline{\framebox{
+ \includegraphics[scale=0.6]{lbk.png}}}
+ \caption{An algorithm that uses a lower bounding distance measure to speed up the sequential scan search for the query Q (adapted from [Ratanamahata et al 2012])}
+ \label{fig:lbk}
+\end{figure}
 
 
 
@@ -1047,17 +1055,21 @@ In this experiment, model based clustering is performed with the \texttt{mclust}
 \subsection{F0 pattern mining using time-series mining techniques} \label{sec:speech mining}
 
 %lets talk about the applications and possible tasks for this area. example: 
-[Koegh ] shows that there are many data mining tasks that can be more efficiently solved as a time-series mining task. 
+[Ratanamahatana et al 2004] shows that there are many data mining tasks that can be more efficiently solved as a time-series mining task, including video / image / handwriting retrieval, and text mining. In this section I discuss previous work that is closely related to F0 pattern mining (as in the current proposed project), including music information retrieval F0 melodic pattern mining, and speech intonation mining.
 
-
-[Sankalp et al 2014] applied exact motif (pattern) discovery to the F0 melodic patterns large collection of Indian music recordings every possible by computing similarity between every possible subsequence pair obtained within an audio recording. show the possible applications of the search tool and network visualization.
-
-
+[Gulati et al 2014] applied exact motif (pattern) discovery to the F0 melodic patterns large collection of Indian music recordings by computing similarity between every possible subsequence pair obtained within an audio recording. This works exemplifies an integration of a variety of time-series mining techniques applied in different tasks crucial for F0 pattern mining in music (and in many cases, in speech) melodic pattern discovery, including distance measures, time-series representation, exact motif discovery[ ], lower bounding in DTW distance computation [ ] and early abandoning in exact motif discovery [  ]. 
 
 
 
+%what is exact motif search?
+Discovery of repeating structures in F0 contours is fundamental to the analysis, understanding and interpretation of its intrinsic structure in both speech and music. At the center of this study is the motif discovery task in time-series. Time series motifs are pairs of individual time series, or subsequences of a longer time series, which are very similar to each other. Therefore, the task of motif discovery is to find all pairs or groups of highly similar subsequences or individual time-series in a large collection of time series data, in an \textit{unsupervised} manner.  Because the obvious algorithm for computing motifs is quadratic in the number of items, more than a dozen \textit{approximate} algorithms to discover motifs have been proposed in the literature. [Mueen et al 2009] proposed the first tractable \textit{exact} motif discovery algorithm that is up to three orders of magnitudes faster than the brute force search algorithm. This is done through a combination of early pruning strategies and early abandoning of distance computation once the computed distance exceeds the best-so-far. 
 
 
+
+
+In [Gulati et al 2014], intra-recording pattern discovery is performed first through this state-of-the-art exact motif discovery algorithm. Top k pairs of motifs known as 'seed' patterns are stored for further evaluation. Subsequently the algorithm searches for their repetitions in the entire music collection. Similarity between melodic patterns are computed using dynamic time warping (DTW), where four different variants of the DTW cost function for rank refinement of the obtained results are evaluated. Over 13 trillion DTW distance computations are done for the entire dataset (360+ hours of music recordings). Due to the computational complexity of the task, different lower bounding and early abandoning techniques are applied during DTW distance computation. An evaluation based on expert feedback on a subset of the dataset shows that the discovered melodic patterns are musically relevant. Several musically interesting relationships are discovered, yielding further scope for establishing novel similarity measures based on melodic patterns. As an outcome of this work, Gulati et al. developed an interactive search tool where users can query and search for the top k similar melodic patterns, which can be further inspected (audio) and analyzed [ ]. \figref{fig:netvis} shows a network visualization of the global and individual patterns found through through unsupervised learning, which allows users to interactively zoom in and out to explore the similarity structure at different levels [ ].  
+
+%show the possible applications of the search tool and network visualization.
 
 
 
@@ -1066,10 +1078,54 @@ In this experiment, model based clustering is performed with the \texttt{mclust}
  \centerline{\framebox{
  \includegraphics[scale=0.5]{sankalp.png}}}
  \caption{Network visualization of melodic patterns mined from a large collection of Indian music. Left: Global structure. Right: Individual similarity groupings. Each node represents a subsequence (pattern) of melodic contours about 2s long. }
- \label{fig:paa}
+ \label{fig:netvis}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%Sankalp 2015
+As mentioned above, one of the most important aspect of F0 time-series pattern mining is the choices made for time-series representation, normalization techniques and distance measures. [Gulati et al 2015] performed a comparative evaluation of methodologies for computing similarity between short-time melodic fragments of audio recordings of Indian art music. Gulati et al. experiment with 560 different combinations of procedures and parameter values, including sampling rate of the melody representation, pitch quantization levels, normalization techniques and distance measures. The results indicate that melodic fragment similarity is particularly sensitive to distance measures and normalization techniques, while sampling rate plays a less important role. Furthermore, the author claims that this type of work paves the way for developing unsupervised melodic pattern discovery approaches, whose evaluation is a challenging and, many times, ill-defined task. Both of these issues (the parameters and the definition of the evaluation of the task) are related to similar task in speech F0 pattern mining. 
+
+
+%zhang 2015
+[Zhang 2015a] investigated the use of time-series mining techniques in the unsupervised learning of Mandarin tones using a read speech data set from [Xu 1997]. In this work, various types of time-series representation, distance measures, and normalization procedures are evaluated with k-means clustering algorithm to find the most effective parameters for tone learning. The result suggests that (1) The D1 (first derivative) feature significantly outperforms the F0-based features when paired with Euclidean distance. (2) The LB\_Keogh lower bounding technique significantly speeds up the computation of DTW distance, which obtained superior results even with F0-based features; (3) SAX feature is a low-dimension yet effective feature that obtains the same level of performance as the D1 feature (with MINDIST distance measure); (4) polynomial and qTA model coefficient based features perform below chance in this task. These behaviors of different features and distance measures with regard to the k-means clustering algorithm is shown in \figref{fig:kmof}. In particular, the polynomial and qTA parameters show periodic oscillation of k-means objective function (intra-cluster distances), without a trend to converge. The distance matrix in \figref{fig:saxhc} and \figref{fig:edhc} may give a hint as to why SAX outperforms the F0 features with Euclidean distance: In \figref{fig:saxhc} we can clearly see that the lower dimension SAX-MINDIST distance reflects the intrinsic structure of the clusters with lower distance along the diagonal (from top left to bottom right); However, in \figref{fig:edhc}, which uses 30-dimension F0 contour feature, the distances are all somewhat equalized. 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% F I G U R E %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+ \centerline{\framebox{
+ \includegraphics[scale=0.7]{kmeansOF.png}}}
+ \caption{Kmeans clustering objective function by number of iteration. Intra-cluster distance (y axis) is normalized. "norm-bark" is normalized Bark scale of F0 values. The top plots show numeric representations of time-series with DTW and Euclidean distance. The bottom plot shows the SAX representation with MINDIST distance. }
+ \label{fig:kmof}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% F I G U R E %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+ \centerline{\framebox{
+ \includegraphics[scale=0.5]{distsax.png}}}
+ \caption{SAX-MINDIST Distance matrix of 1600 Mandarin tones sorted by tone category. Top and Left show the hierarchical clustering of tones using single-linkage and centroid distance}
+ \label{fig:saxhc}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%% F I G U R E %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+ \centerline{\framebox{
+ \includegraphics[scale=0.5]{disted.png}}}
+ \caption{F0-Euclidean Distance matrix of 1600 Mandarin tones sorted by tone category. Top and Left show the hierarchical clustering of tones using single-linkage and centroid distance}
+ \label{fig:edhc}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%include the accuracy result table. 
 
 
 %\section{Prosody based dialect detection via unsupervised learning}
