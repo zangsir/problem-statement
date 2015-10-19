@@ -78,7 +78,7 @@ There has been limited effort on the unsupervised and semi-supervised learning o
 In the meantime, unsupervised learning of tones using time-series mining techniques has shown great potential for improving the efficiency and accuracy of this task. [9] showed that by viewing tone F0 contours as a collection of time series, we’re able to employ techniques from time-series mining to speed up the computation of distance measures as well as requiring less storage space. The Symbolic Aggregate approXimation (SAX) representation of time series allows for efficient computation based on string based algorithms, while achieving better clustering accuracy on a read speech data set than using numeric representation with Euclidean distance (and comparable with numeric feature using Dynamic Time Warping distance measure, and the First Derivative (D1) feature with Euclidean distance). However, this approach is yet to be evaluated on a comparable data set as [7,8], as well as spontaneous speech data sets.  
 
 
-\section{Research Questions}
+\section{Research Questions} \label{rq}
 This Problem Statement is based on the following goals and research questions of my thesis project.  
 
 This project has two main goals:
@@ -457,10 +457,23 @@ To address this problem and upgrade the qTA model to include more features refle
 
 \subsection{Evaluation data set}
 %discuss pros and cons with Xu's argument
+An important aspect of machine learning is the data set used in training and evaluation. In Mandarin tone learning, the nature of the data set varies depending on mode of the speech: tones contour shapes in a read speech data set are more faithful to the canonical forms, and is therefore easier to learn (although it is by no means perfectly "clean", as co-articulation between adjacent syllables will still introduce variability). Such data sets are usually produced with carefully designed research questions in mind (in the context of a speech production / perception experiment) and is therefore not always appropriate to use in all contexts. The advantage, of course, is that the data set is controlled and may contain more balanced data with regard to the goal of the study, which helps the researcher to better understand a particular problem. In contrast, in a large spontaneous speech data set (such as news data set), the speaking rate is faster, and all parameters of the speech are free to vary. This leads to more distortions to the shapes of the tone contours, and makes them more difficult to recognize when considered in isolation for each syllable. Traditionally, evaluation of tone recognition systems is usually done with both types of data set, progressing from an easier "clean" data set to a more messy and much bigger "hard" data set [ ]. 
+
+[Xu and Prom-on 2014] paid special attention to justifying the use of experimentally produced, smaller, "clean" data sets in training their prosodic models of PENTATrainer 2 with supervised learning methods: 
+
+\begin{quote}
+......Note that all these three corpora, due to their experimental nature, may seem more
+limited than most other corpora used in data-driven modeling, which are typically much less controlled. But speech corpora are merely subsets of all speech and as such they can never be full exhaustive. What really matters is whether a corpus includes sufficient samples (preferably by multiple speakers) of the patterns of interest as well as their triggering contexts. Traditional corpora, typically consisting of many more unique sentences than in a controlled corpus, inevitably have very uneven sample sizes for different patterns. As a result, it is hard to determine in the end which proportion of the modeling errors should be attributed to the modeling algorithms and which should be attributed to the uneven sample sizes. A further advantage of controlled corpora is that they allow special designs for focusing on difficult problems such as the neutral tone in Mandarin...... it would be very hard to find more than a few (or any at all) samples of similar neutral tone sequence in a traditional corpus. Furthermore, controlled corpora, like those just described, due to their full transparency, makes it easier for investigators to understand what may be the source of a particular problem and how damaging it is, as we will see in the case of the Mandarin corpus used in the present study...... 
+
+\end{quote}
+
+
 %lab condition is controlled, but not perhaps always mirror what happens in spontaneous speech as Dinoj dissertation suggested.
 %edit this:
-[Liu et al 2006]This paper uses the B-Spline coefficients plus some acoustic features to train decision tress to do question/statement classification from prosody. This is interesting since it uses parameter based features. Depending on the specifics of B-Spline, it may shed light on our quest for using parameter/coefficients based features in classification or (unsupervised) clustering , which may differ. One interesting point, already discussed in Xu and Prom-on 2014, is that the issue of data set. For instance, in this paper the author analyzed global prosody by using a data set where tone effects are removed, in which all tones in a sentence are first tone. This kind of design is indeed very helpful in understanding the behavior of the tone distortions, and it’s good to think about (1) how I can manage the data in our research and (2) how this issue would matter in our un-superfised framework and a broader data mining framework (not the linguistic framework).
 
+
+
+This point is well supported by many experimental works. For example, [Liu et al 2006] analyzed sentence global intonation by using a data set where tone effects are removed. This is achieved through carefully controlled sentences where all words have the same tone (such as the first tone). This type of design is indeed very helpful in understanding the behavior of the global intonation without the effect of tones, and it may indeed by hard to obtain from a large corpus of spontaneous speech. In the meantime, from the perspective of building robust predictive models, the complexity of a larger real data set of spontaneous speech is still indispensable. 
 
 
 
@@ -585,9 +598,6 @@ Other tone recognition researchers have sought to identify the most relevant reg
 \section{ Unsupervised learning of Mandarin tones}
 There has been limited effort on the unsupervised learning of tones. It is well known that most supervised learning framework must rely on a large amount of manual annotation effort that is costly in time and money [Levow 2006b]. This annotation bottleneck as well as a theoretical interest in the learning of tone motivates the use of unsupervised or semi-supervised approaches to tone recognition whereby the reliance on this often scarce resource can be reduced[Levow 2006a]. Another motivation to explore unsupervised learning is to understand the process of language acquisition, as child learners must identify these linguistic categories without explicit instruction by observation of natural language interaction[Levow 2006b]. As such, the goal of such unsupervised learning frameworks is to improve the accuracy of tone learning algorithms with minimum supervision and human labeled data.
 
-Another dimension of unsupervised learning of tones is the data mining of speech prosody in a large spoken or intonation corpus [Raskinis and Kazlauskiene 2013]. The goal of this endeavor, in contrast, lies in the improved understanding of speech intonation and tone contour patterns through unsupervised data mining and pattern discovery algorithms using a large quantity of real speech data. Such patterns will also shed light on the nature of variability of tone in spontaneous speech and provide better features and context-dependent models for tone recognition modeling. Previous works [Zhang 2015] have shown that this type of data mining task can be more efficiently carried out by viewing intonation contour as a time series and employing techniques from the subfield of time-series data mining.
-
-In the next two sections I first review previous works on unsupervised learning of Mandarin tones from the standard speech / tone recognition literature. Then I review the relevant works, concepts and key issues in time-series mining and how it might relate to speech intonation mining. Next, I discuss the important distance measures and algorithms used in both general unsupervised learning and time-series mining. Finally, I explore issues associated with the design and selection of the evaluation data set. 
 
 
 
@@ -701,7 +711,9 @@ kind of chapter format, maybe could be more like lit review and not text book.
 	
 	
 \section{Speech prosody mining using time-series mining techniques}
-Previous works in corpus based intonation research [Raskinis and Kazlauskiene 2013, Zhang 2015] have shown the challenges of data mining and clustering of speech intonation data in a large spoken / intonation corpus. At the core of this task is the expensive computation of a large amount of high-dimensional pairwise distance (especially with the widely preferred Dynamic Time Warping or DTW distance measure for time-series data) to obtain the distance matrix, and to find the most effective low-dimension feature representation for the F0 time-series data that faithfully preserve the true distances among objects with increased efficiency for storage.
+Another dimension of unsupervised learning of tones is the data mining of speech prosody in a large spoken or intonation corpus [Raskinis and Kazlauskiene 2013]. The goal of this endeavor is the improved understanding of speech intonation and tone contour patterns through unsupervised data mining and pattern discovery algorithms using a large quantity of real speech data. Such patterns will also shed light on the nature of variability of tone in spontaneous speech and provide better features and context-dependent models for tone recognition modeling. 
+
+Previous works in corpus based intonation research [Raskinis and Kazlauskiene 2013, Zhang 2015] have shown the challenges of mining a large intonation corpus. At the core of this task is the expensive computation of a large amount of high-dimensional pairwise distance (especially with the widely preferred Dynamic Time Warping or DTW distance measure for time-series data) to obtain the distance matrix, and to find the most effective low-dimension feature representation for the F0 time-series data that faithfully preserve the true distances among objects with increased efficiency for storage.
 
 [Zhang 2015] showed the potential of employing time-series data mining techniques to solve these problems, including techniques to speed up DTW distance computation [ ] and to transform feature representations for both dimensionality reduction and efficiency of computation and storage [ ]. In fact, F0 contour data can be naturally viewed as time-series data with F0 on the y-axis and time on the x-axis. Time-series mining has been successfully applied in a number of fields that deal with various kinds of time-series, including (the most relevant for our current purposes) Music Information Retrieval (MIR), where F0 contour data from music signal are indexed and searched, and meaningful patterns discovered [ ]. 
 
@@ -1087,8 +1099,44 @@ In [Gulati et al 2014], intra-recording pattern discovery is performed first thr
 As mentioned above, one of the most important aspect of F0 time-series pattern mining is the choices made for time-series representation, normalization techniques and distance measures. [Gulati et al 2015] performed a comparative evaluation of methodologies for computing similarity between short-time melodic fragments of audio recordings of Indian art music. Gulati et al. experiment with 560 different combinations of procedures and parameter values, including sampling rate of the melody representation, pitch quantization levels, normalization techniques and distance measures. The results indicate that melodic fragment similarity is particularly sensitive to distance measures and normalization techniques, while sampling rate plays a less important role. Furthermore, the author claims that this type of work paves the way for developing unsupervised melodic pattern discovery approaches, whose evaluation is a challenging and, many times, ill-defined task. Both of these issues (the parameters and the definition of the evaluation of the task) are related to similar task in speech F0 pattern mining. 
 
 
+%%results two tables
+
+\begin{table}
+
+ \caption{Average clustering accuracy (\%) by distance measure and TS representation (F0\_Hertz = baseline, adapted from [Zhang 2015]) }
+ \label{tab:zhangres}
+ \begin{center}
+ \begin{tabular}{|c|c|c|c|}
+\hline
+
+\multicolumn{2}{|c|}{SAX MIN\_DIST} & \multicolumn{2}{|c|}{DTW (LB\_Keogh)} \\  
+\hline
+  D1(SAX) & BK\_NORM(SAX) & D1 & BK\_NORM \\
+  \hline
+ 74.84 & 79.79 & 80.6 & 65.25\\
+ \hline
+ \end{tabular}
+ 
+%second table
+ \begin{tabular}{|c|c|c|c|c|}
+
+\hline
+\multicolumn{5}{|c|}{Euclidean Distance} \\  \hline
+D1 & qTA & polynomial & BK\_NORM & \textit{F0\_Hertz}\\
+\hline
+81.86 & low & low & 66.82 & \textit{55.68}\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+
+
 %zhang 2015
-[Zhang 2015a] investigated the use of time-series mining techniques in the unsupervised learning of Mandarin tones using a read speech data set from [Xu 1997]. In this work, various types of time-series representation, distance measures, and normalization procedures are evaluated with k-means clustering algorithm to find the most effective parameters for tone learning. The result suggests that (1) The D1 (first derivative) feature significantly outperforms the F0-based features when paired with Euclidean distance. (2) The LB\_Keogh lower bounding technique significantly speeds up the computation of DTW distance, which obtained superior results even with F0-based features; (3) SAX feature is a low-dimension yet effective feature that obtains the same level of performance as the D1 feature (with MINDIST distance measure); (4) polynomial and qTA model coefficient based features perform below chance in this task. These behaviors of different features and distance measures with regard to the k-means clustering algorithm is shown in \figref{fig:kmof}. In particular, the polynomial and qTA parameters show periodic oscillation of k-means objective function (intra-cluster distances), without a trend to converge. The distance matrix in \figref{fig:saxhc} and \figref{fig:edhc} may give a hint as to why SAX outperforms the F0 features with Euclidean distance: In \figref{fig:saxhc} we can clearly see that the lower dimension SAX-MINDIST distance reflects the intrinsic structure of the clusters with lower distance along the diagonal (from top left to bottom right); However, in \figref{fig:edhc}, which uses 30-dimension F0 contour feature, the distances are all somewhat equalized. 
+[Zhang 2015a] investigated the use of time-series mining techniques in the unsupervised learning of Mandarin tones using a read speech data set from [Xu 1997]. In this work, various types of time-series representation, distance measures, and normalization procedures are evaluated with k-means clustering algorithm to find the most effective parameters for tone learning. The result suggests that (1) The D1 (first derivative) feature significantly outperforms the F0-based features when paired with Euclidean distance. (2) The LB\_Keogh lower bounding technique significantly speeds up the computation of DTW distance, which obtained superior results even with F0-based features; (3) SAX feature is a low-dimension yet effective feature that obtains the same level of performance as the D1 feature (with MINDIST distance measure); (4) polynomial and qTA model coefficient based features perform below chance in this task. These behaviors of different features and distance measures with regard to the k-means clustering algorithm is shown in \figref{fig:kmof}. In particular, the polynomial and qTA parameters show periodic oscillation of k-means objective function (intra-cluster distances), without a trend to converge. The distance matrix in \figref{fig:saxhc} and \figref{fig:edhc} may give a hint as to why SAX outperforms the F0 features with Euclidean distance: In \figref{fig:saxhc} we can clearly see that the lower dimension SAX-MINDIST distance reflects the intrinsic structure of the clusters with lower distance along the diagonal (from top left to bottom right); However, in \figref{fig:edhc}, which uses 30-dimension F0 contour feature, the distances are all somewhat equalized. Table \ref{tab:zhangres} shows an overview of the clustering accuracy. 
 
 
 
@@ -1129,10 +1177,21 @@ As mentioned above, one of the most important aspect of F0 time-series pattern m
 
 
 %\section{Prosody based dialect detection via unsupervised learning}
-\section{ Chapter outlines}
+\section{Conclusion and Chapter outlines}
+In this document I have defined the goal and research questions for my doctoral thesis. The first goal of the thesis is to better understand sources of variability of Mandarin tones in spontaneous speech by mining speech intonation corpora using time-series mining techniques. The second goal is to improve the accuracy for unsupervised learning of tones through feature selection and context-dependent modeling. This is also informed by the results from the first goal. The concrete research questions are more detailed breakdowns of these two main goals, as stated in Section \ref{rq}.
 
+Following the definition of the goals and questions, I reviewed previous works from speech production and perception, speech prosody modeling, supervised and unsupervised learning, and time-series mining, and discussed important themes surrounding tone learning and recognition. At the core of these discussions is the question of what is the source of variability of tones in spontaneous speech, how can we identify these sources, and how can we exploit that knowledge to improve the modeling of tone recognition in various kinds of supervised and unsupervised frameworks. In the latter part of the document, I discuss works from F0 pattern mining in speech and music that employs time-series mining techniques.  Many of these aforementioned tasks would benefit from this approach, which has the advantage of being able to effectively and efficiently discover meaningful patterns from a large collection of speech F0 data with minimum supervision and manual labeling effort. For example, to better understand the context effects of tones from real data, we can perform an exact motif discovery search not only on single syllable unit contours, but also on longer units such as syllable bi-grams and tri-grams. 
 
+The tentative outline of the proposed doctoral thesis is as follows.
 
+Chapter 1 - 2 will introduce the problem of Mandarin tone learning and define the goals and research questions of the thesis. Chapter 3 will include an information theoretic analysis of the importance of tones for Mandarin word recognition from the perspective of human speakers, to whom there are many other contextual information available for determining the identity of spoken words in Mandarin. This will illustrate the importance of tones from a new perspective, and serves as a basis for why contextual-dependent research is crucial in tone learning.
+
+Chapter 4 will review the previous works on the sources of variability of Mandarin tones in spontaneous speech and how it is exploited in the computational modeling of tones. This includes both experimental works and computational works, with the latter encompassing prosodic modeling and machine learning. Next, I review works on the mining and unsupervised learning of tones.  
+
+Chapter 5 focuses on the speech intonation data mining using time-series mining techniques. The goal of this task is to use unsupervised and semi-supervised pattern discovery algorithms to improve our understanding of the sources of variability in F0 contours from a large database of spontaneous speech in Mandarin. Based on the result from Chapter 5, Chapter 6 will focus on how to improve the accuracy of unsupervised tone learning with context dependent F0 based features (using appropriate time-series representations). 
+
+In Chapter 7, I experiment with both F0 based features and additional features to improve the unsupervised and semi-supervised learning of tones. Chapter 8 concludes the study with by summarizing the results and proposing future works.
+ 
 
 
 \end{document}
