@@ -1,0 +1,76 @@
+\documentclass[12pt]{article}
+\usepackage{multirow,booktabs}
+\usepackage{verbatim}
+
+
+
+\begin{document}
+\begin{comment}
+\begin{tabular}{ c | c | c | c | c }
+  H1 & \multicolumn{4}{c}{H2} \\
+
+  \hline\\
+  T1 & test & \multicolumn{2}{c}{text} & text \\
+  \hline\\
+  T1 & \multicolumn{2}{c}{text} & \multicolumn{2}{c}{text} \\
+  \hline\\
+  T1 & text & text & text & text \\
+\end{tabular}
+\end{comment}
+
+
+
+\begin{table}
+
+ \caption{Average clustering accuracy (\%) by distance measure and TS representation }
+ \label{table:zhangres}
+ \begin{center}
+ \begin{tabular}{|c|c|c|c|}
+\hline
+
+\multicolumn{2}{|c|}{SAX MIN\_DIST} & \multicolumn{2}{|c|}{DTW (LB\_Keogh)} \\  
+\hline
+  D1(SAX) & BK\_NORM(SAX) & D1 & BK\_NORM \\
+  \hline
+ 74.84 & 79.79 & 80.6 & 65.25\\
+ \hline
+ \end{tabular}
+ 
+%second table
+ \begin{tabular}{|c|c|c|c|c|}
+
+\hline
+\multicolumn{5}{|c|}{Euclidean Distance} \\  \hline
+D1 & qTA & polynomial & BK\_NORM & F0\_Hertz\\
+\hline
+81.86 & low & low & 66.82 & 55.68\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+
+%Demo
+
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{Team sheet} \\
+\hline
+Goalkeeper & GK & Paul Robinson \\ \hline
+\multirow{4}{*}{DEFENDERS} & LB & Lucus Radebe \\
+ & DC & Michael Duberry \\
+ & DC & Dominic Matteo \\
+ & RB & Didier Domi \\ \hline
+\multirow{3}{*}{Midfielders} & MC & David Batty \\
+ & MC & Eirik Bakke \\
+ & MC & Jody Morris \\ \hline
+Forward & FW & Jamie McMaster \\ \hline
+\multirow{2}{*}{Strikers} & ST & Alan Smith \\
+ & ST & Mark Viduka \\
+\hline
+\end{tabular}
+
+\end{document}
