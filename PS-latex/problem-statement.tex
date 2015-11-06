@@ -4,7 +4,7 @@
 \usepackage{graphicx}
 \usepackage{courier}
 \usepackage{authblk} 
-\usepackage[ margin=1.5in]{geometry}
+\usepackage[ margin=1.3in]{geometry}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{verbatim}
@@ -63,49 +63,53 @@ contents
 %abstract
 \pagebreak
 \begin{abstract}
-Tone recognition is an important and difficult task in Mandarin speech recognition that current commercial systems largely leave out. From an information theoretic point of view, tones carry at least as much as information as vowels. Recent years have seen increasing interests in the tone recognition research from the machine learning community, most of which aimed at building robust supervised machine learning system with improved accuracy, while limited effort has been made in unsupervised approaches. In my doctoral thesis work, I explore the speech prosody mining and unsupervised learning of Mandarin tones. In this document, I define the problem of unsupervised learning of Mandarin tone and identify the major challenges in tone recognition by both supervised and unsupervised learning systems. I then outline the main relevant topical areas of research and review the previous works on each of those areas while expanding the exploration of the research questions. Finally, I briefly describe the tentative plans for my thesis work and outline the intended chapters.
+Tone recognition is an important and difficult task in Mandarin speech recognition that commercial systems largely leave out until recently. From an information theoretic point of view, tones carry at least as much as information as vowels. Recent years have seen increasing interests in the tone recognition research from the machine learning community, most of which aimed at building robust supervised machine learning system with improved accuracy, while limited effort has been made in unsupervised approaches. In my doctoral thesis work, I explore the speech prosody mining and unsupervised learning of Mandarin tones. In this document, I define the problem of unsupervised learning of Mandarin tone and identify the major challenges in tone recognition by both supervised and unsupervised learning systems. I then outline the main relevant topical areas of research and review the previous works on each of those areas while expanding the exploration of the research questions. Finally, I briefly describe the tentative plans for my thesis work and outline the intended chapters.
 \end{abstract}
 
 
 \section{Introduction}
 
-Tone recognition is an important and difficult task in Mandarin speech recognition that current commercial systems largely leave out [Levow 2006a]. From an information theoretic point of view, tones carry at least as much as information as vowels [Surendran 2007]. Recent years have seen increasing interests in the tone recognition research from both speech and machine learning community [Levow 2005,2006a,2006b, Surendran et al 2004, 2005, 2006, 2007, Wang et al 2010, 2011, Zhang et al 2004,2005, Yu 2011, and many others]. 
+Tone recognition is an important and difficult task in Mandarin speech recognition that commercial systems largely leave out until recently [Levow 2006a]. From an information theoretic point of view, tones carry at least as much as information as vowels [Surendran 2007]. Recent years have seen increasing interests in the tone recognition research from both speech and machine learning community [Levow 2005,2006a,2006b, Surendran et al 2004, 2005, 2006, 2007, Wang et al 2006, 2011, Zhang et al 2004,2005, Yu 2011, and many others]. 
 
-Several major challenges make tone recognition in spontaneous speech a difficult task. First, although traditionally being the single most important cue of tone recognition, the F0 contour based features alone are often considered to be insufficient, and must be coupled with other types of features such as intensity, voice quality, etc [Surendran 2007]. However, the improvement by incorporating these features is usually small. Second, it has been shown that the distortion of F0 contours from the canonical templates of tone categories (i.e., “the surface tone contour variability problem”) mainly comes from two sources : (1) local context, i.e., coarticulation caused by the adjacent tone environments of the current syllable, due to the physiological and phonological constraints; (2) Higher level “broad” range context, or sometimes known as “expressive functions” [Wang et al 2011] outside of prosodic domain, such as focus, sentence modality / mood (e.g., question vs. declaration), and sentence length. Therefore, how to identify and exploit this context information in order to restore the underlying tone target can be crucial to substantial improvement in utilizing F0 based features in tone recognition. Third, to this date, most systems of tone recognition employ supervised learning, which relies on the high cost of manually annotating and labeling a large amount of audio data.   
+Several major challenges make tone recognition in spontaneous speech a difficult task. First, although traditionally being the single most important cue of tone recognition, the F0-contour-based features alone are often considered to be insufficient, and must be coupled with other types of features such as intensity, voice quality, etc [Surendran 2007]. However, the inclusion of each additional feature often leads to a quite small improvement. Second, it has been shown that the distortion of F0 contours from the canonical templates of tone categories (i.e., “the surface tone contour variability problem”) mainly comes from two sources : (1) local context, distortion caused by the adjacent tone environments of the current syllable, due to the physiological (co-articulation) and phonological constraints; (2) Higher level “broad” context, such as focus, sentence modality / mood (e.g., question vs. declaration), and sentence length. Therefore, identifying and exploiting this context information is crucial to substantial improvement in utilizing F0-based features in tone recognition. Third, to this date, most systems of tone recognition employ supervised learning, which relies on the high cost of manually annotating and labeling a large amount of audio data.   
 
 There has been limited effort on the unsupervised and semi-supervised learning of tones. [Levow 2006a, 2006b] explored the clustering of Mandarin tones and English pitch accent using spectral clustering with both F0 and intensity features. The result is in general worse but in many cases comparable to the best supervised algorithms. However, many aspects of this unsupervised learning task can be further investigated, including (but not limit to) the most effective use of feature representation, distance measures, and clustering algorithms.  
 
-In the meantime, unsupervised learning of tones using time-series mining techniques has shown great potential for improving the efficiency and accuracy of this task. [Zhang 2015] showed that by viewing tone F0 contours as a collection of time series, we’re able to employ techniques from time-series mining to speed up the computation of distance measures as well as requiring less storage space. The Symbolic Aggregate approXimation (SAX) representation of time series allows for efficient computation based on string based algorithms, while achieving better clustering accuracy on a read speech data set than using numeric representation with Euclidean distance (and comparable with numeric feature using Dynamic Time Warping distance measure, and the First Derivative (D1) feature with Euclidean distance). However, this approach is yet to be evaluated on a comparable data set as [Levow 2006a, 2006b], as well as spontaneous speech data sets.  
+In the meantime, unsupervised learning of tones using time-series mining techniques has shown promising results for improving the understanding and performance of this task. [Zhang 2015] showed that by viewing tone F0 contours as a collection of time series, we are able to employ techniques from time-series mining to speed up the computation of distance matrix and reduce the dimensionality of the data, while delivering competitive results. However, this approach is yet to be evaluated on a comparable data set as [Levow 2006a, 2006b], as well as spontaneous speech data sets.  
 
 
-\section{Research Questions} \label{rq}
+\section{Research questions} \label{rq}
 This Problem Statement is based on the following goals and research questions of my thesis project.  
 
+\subsection{Research goals}
 This project has two main goals:
 
-(1) In \textbf{speech prosody mining}, use time-series mining and pattern discovery to better understand the F0-contour prosodic patterns in a corpus of spontaneous speech and the sources of variation for F0 tone variation. This part is carried out with annotated metadata of syllable boundaries, tones, and other non-acoustic information.
+ \textbf{(1) In Speech Prosody Mining (SPM), use time-series mining and pattern discovery techniques to improve our understanding of the F0-contour patterns and the sources of variability of tones in running speech. } In particular, the time-series mining of speech prosody offers tools and methods for in-depth exploration of the internal structures of the F0 variations in tone production by discovering meaningful patterns across different temporal units in a large corpus. Such knowledge can be used to improve the tone recognition models in both unsupervised and supervised learning.
 
-(2)  In \textbf{unsupervised learning of tones}, use various context-dependent modeling and unsupervised learning to improve the accuracy of tone recognition. 
+ \textbf{(2) In Unsupervised Learning of Tones (ULT), improve the tone recognition accuracy in an unsupervised or semi-supervised framework. }
+ 
+ 
+\subsection{Research questions}
+In this project, we focus on the problem of speech prosody time-series mining and unsupervised learning of Mandarin tones with the following research questions:  
 
-In this project, we focus on the problem of unsupervised learning of Mandarin tones with the following research questions:  
+\textbf{(1) How important is tone recognition?} 
 
-\textbf{(1) How important is tone recognition?} Are human listeners always able to recognize tones when presented in isolation out of context? If not, from a information theory perspective, how much information does tone carry in human speech understanding? (in other words, how much can Mandarin speakers understand from mono-tone Mandarin speech? This has implications on the question of how well should we expect a tone recognizer to perform based on acoustic information alone out of context.) 
+a. From a information theory perspective, how much information does tone carry in human speech understanding (given all the information present in spoken language)? 
+
+\textbf{(2) Time-series mining of speech prosody.}
+
+a. What can we learn about the characteristic patterns and sources of variability for tones in a large speech corpus, by using time-series mining based pattern discovery algorithms? 
+
+b. How can we incorporate knowledge learned from (2a) to improve tone recognition accuracy?
+
+\textbf{(3) Features in unsupervised and semi-supervised learning of Mandarin tones.} 
+
+a. F0-based features: How can we incorporate local context information (i.e., adjacent tone categories) and broad context information (e.g., focus, modality, etc.) for F0-based features to improve the unsupervised or semi-supervised tone learning? 
 
 
 
-\textbf{(2) Context-dependent modeling in tone recognition.} 
 
-(2a) What can we learn about the sources of variation for tone F0 contours in a large speech corpus, by using time-series mining based pattern discovery algorithms?
-
-(2b) How can we incorporate local context-dependent (i.e., coarticulation depending on the adjacent tone contexts) information to modify the F0 contour time series that makes the unsupervised or semi-supervised learning more effective? 
-
-(2c) How can we incorporate broader context information (e.g., focus, modality, etc.) to improve tone recognition accuracy in an unsupervised framework?
-
-
-\textbf{(3) Features.} Using these techniques, can we obtain comparable or better performance using 
-F0 contour based features alone?  
-
-\textbf{(4) Unsupervised learning.} How can we combine F0 based features with other types of features (e.g., spectral) to improve the performance in an unsupervised or semi-supervised framework?   
+b. Additional features: How can we combine F0-based features with other types of features (e.g., intensity, voice quality) to improve the performance in an unsupervised or semi-supervised framework?   
 
 \begin{comment}
 Upon investigating each of these questions, we then explore the potential applications of this framework in the unsupervised learning of prosody-based dialect detection based. In this sample task, in a collection of speech segments, each segment is a \textit{m}-minute speech recording spoken in one of n Mandarin Chinese dialects. The final goal is to cluster the prosody profiles of the segments so that each cluster reveals a type of dialect. Operationally, we break the problem of prosody profile clustering into an unsupervised tone recognition task (investigated in the previous chapters of the thesis), and we use the result from that task to then do the dialect prosody clustering on a higher level.    
@@ -114,7 +118,7 @@ Upon investigating each of these questions, we then explore the potential applic
 
 
 \section{How important is tone recognition?}
-Until very recently, the state-of-the-art speech recognition of tone languages typically discard tone information altogether. There has been many discussions on why this is so [Surendran 2007], which is mainly attributed to the high error rate of tone recognition that supersedes the benefit of including tone information. Recent development in tone recognition, however, reveals the importance of tone information in speech recognition from a information theoretic point of view. In [Surendran 2004], the functional load of tones is found to be at least as high as vowels while lower than the consonants. Here, the functional load of tones (FL) is defined as the information we lose if the phonological system loses the contrast posed by tones: 
+Until recently, the state-of-the-art speech recognition of tone languages typically discard tone information altogether. There has been many discussions on why this is so [Surendran 2007]. It is mainly attributed to the high error rate of tone recognition algorithms that supersedes the benefit of including tone information. Recent development in tone recognition, however, reveals the importance of tone information in speech recognition from a information theoretic point of view. In [Surendran 2004], the functional load of tones is found to be at least as high as vowels while lower than the consonants. Here, the functional load of tones (FL) is defined as the information we lose if the phonological system loses the contrast posed by tones: 
 
  %%%%%%%%%%%%%%%%%%%%%%%% E Q U A T I O N %%%%%%%%%%%%%%%%%%%%%
  
@@ -125,7 +129,7 @@ FL (tone) = \frac {H(M_u)-H(M_u^{-tone})} {H(M_u)}
 
 
 
-where $M_u$ is a sequence of units of type U in Mandarin, U being either a a syllable or word in the entropy function H(.) calculation, $M_u^{-tone}$ refers to such a sequence without tone contrast, and H(.) is the standard entropy function of the system (i.e., a well defined \textit{language}). FL is defined as the functional load of tone. Intuitively, it characterizes how much information the system lose if the tone contrast is lost, therefore how important is a contrast within a phonological system. Table \ref{table:models} shows the functional load of tones versus other segmental contrast in Mandarin. 
+where $M_u$ is a sequence of units of type U in Mandarin, U being either a a syllable or word in the entropy function H(.) calculation, $M_u^{-tone}$ refers to such a sequence without tone contrast, and H(.) is the standard entropy function of the system (i.e., a well defined \textit{language}). FL is defined as the functional load of tone. Intuitively, it characterizes how much information the system lose if the tone contrast is lost, therefore how important a contrast is within a phonological system. Table \ref{table:models} shows the functional load of tones versus other segmental contrast in Mandarin. 
 
 %%results
 \begin{table}[h]
@@ -155,9 +159,9 @@ where $M_u$ is a sequence of units of type U in Mandarin, U being either a a syl
 
 This analysis captures the importance of tones in Mandarin speech recognition systems. However, it should also be interpreted carefully. First, it has the implicit assumption of taking a pure phonological point of view while ignoring all other information that can be used to distinguish words and syllables such as n-grams language models, which uses non-acoustic information during HMM based speech recognition (which is why Mandarin speech recognition can perform above 90\% accuracy without any tone information [Chang et al 2000]). In this regard, the [Surendran 2004] analysis fails to capture the importance of tones viewed from a broader perspective.
 
-Second, results like [Chang et al 2000] also calls for an analysis of how important tone is for Mandarin speech recognition in humans. It is often an implicit assumption in tone recognition literature that humans are always able to perform with reasonably high accuracy in tone recognition [Zhang and Hirose 2004] even when contextual tonal, segmental, and other information are unavailable. However, speech experiments have revealed that native Mandarin speakers could perform below chance in isolated syllable tone recognition when additional information usually available in speech is removed [Xu 1994], depending on the specific experimental conditions. This is also supported by additional experimental evidence that humans are able to perform with greater than 90\% accuracy in speech recognition with tone information removed in Mandarin (i.e., monotone F0 is imposed synthetically)[Patel and Xu 2010]. 
+Second, results like [Chang et al 2000] also calls for an analysis of how important tone is for Mandarin speech recognition in humans. It is often an implicit assumption in tone recognition literature that humans are always able to perform with reasonably high accuracy in tone recognition [Zhang and Hirose 2004] even when contextual tonal, segmental, and other information are unavailable. However, speech experiments have revealed that native Mandarin speakers could perform below chance in isolated syllable tone recognition tasks when additional information usually available in speech is removed [Xu 1994], depending on the specific experimental conditions. This is also supported by additional experimental evidence that humans are able to perform with greater than 90\% accuracy in speech understanding with tone information removed in Mandarin (i.e., monotone F0 is imposed synthetically)[Patel and Xu 2010]. 
 
-Therefore, it is worthwhile to investigate this problem from an information theory point of view (which from the above discussion, would reveal that it is much less important than [Surendran 2004] have suggested). The implication of such an analysis would be that, we cannot expect a machine to perform perfectly on isolated syllable tone recognition when humans cannot do it in the first place. Meanwhile, it suggests the importance to develop context-dependent tone recognition algorithms that also uses contextual information beyond the information present in the acoustic signal of isolated syllables.
+Therefore, it is worthwhile to investigate this problem from an information theory point of view at a broader perspective (which from the above discussion, would reveal that it is much less important than [Surendran 2004] have suggested). The implication of such an analysis would be that, we cannot expect a machine to perform perfectly on isolated syllable tone recognition when humans cannot do it in the first place. Meanwhile, it suggests the importance to develop context-dependent tone recognition algorithms that also uses contextual information beyond the information present in the acoustic signal of isolated syllables.
 
 %include more on the Kaifu Lee paper of how can tone help.
 
@@ -197,7 +201,7 @@ In this section we discuss previous works on the sources of variability from bot
 \begin{figure}
  \centerline{\framebox{
  \includegraphics[scale=0.5]{allrise.png}}}
- \caption{Experimentally controlled production of all Rising tones in statement vs question sentences with varying focus position (adapted from [Liu et al 2006])}
+ \caption{Experimentally controlled production of all Rising tones in statement (solid lines) vs question sentences with varying focus position (adapted from [Liu et al 2006])}
  \label{fig:qvss}
 \end{figure}
 
@@ -206,18 +210,18 @@ In this section we discuss previous works on the sources of variability from bot
 \begin{figure}
  \centerline{\framebox{
  \includegraphics[scale=0.5]{allhigh.png}}}
- \caption{Experimentally controlled production of all High tones in statement vs question sentences with varying focus position (adapted from [Liu et al 2006])}
+ \caption{Experimentally controlled production of all High tones in statement (solid lines) vs question sentences with varying focus position (adapted from [Liu et al 2006])}
  \label{fig:allhigh}
 \end{figure}
 
 
 
 \subsection{Sources of variability: Evidence from speech perception and production}
-[Gauthier et al 2007] identified two major sources for the extensive overlap between the tone contour shapes in running speech. The first is the difference in the pitch range of individual speakers and the second is the variability introduced by tonal context in connected speech [Shen 1990, Xu 1997]. In tone recognition literature, the speaker difference is usually removed by normalization. The tonal context, as mentioned above, is where the majority of the research effort has been devoted in identifying and isolating sources of variability. 
+[Gauthier et al 2007] identified two major sources for the extensive overlap among the contour shapes of different tone categories in running speech. The first is the difference in the pitch range of individual speakers and the second is the variability introduced by tonal context in connected speech [Shen 1990, Xu 1997]. In tone recognition literature, the speaker difference is usually removed by normalization. The tonal context, as mentioned above, is where the majority of the research effort has been devoted in identifying and isolating sources of variability. 
 
-Recent works from speech production and perception experiments have made substantial progress on identifying sources of variability in tone production by carrying out experiments with carefully controlled conditions and designed data set[Xu and Prom-on 2014]. These experimental works also became important references for the tone recognition research community, as it is important to also exploit these knowledge in the machine learning of tones and recover underlying tone target, which leads to the context-dependent (CI) models. 
+Recent works on speech production and perception have made substantial progress on identifying sources of variability in tone production by carrying out experiments with carefully controlled conditions and designed data sets [Xu and Prom-on 2014]. These experimental works also became important references for the tone recognition research community, as it is important to also exploit these knowledge in the machine learning of tones. These developments have led to the context-dependent (CI) models. 
 
-In particular, previous works have identified the two levels of sources for tone variability in continuous speech production: First, a \textit{local context} refers to the distortion to tones from its canonical shapes due to the co-articulation with adjacent tones. Second, a \textit{broad context} refers to the further modification of tone contours on the intonation level of a larger prosodic unit than syllable. Examples of broad context including the topic, focus, and modality/mood of a sentence. The next two sections review works on both the local and broader context in tone production.
+In particular, experimental works have identified the two levels of sources for tone variability in continuous speech production: First, a \textit{local context} refers to the distortion to tones from its canonical shapes due to the co-articulation with adjacent tones. Second, a \textit{broad context} refers to the further modification of tone contours on the intonation level of a larger prosodic unit than syllable [Wang and Levow 2011]. Examples of broad context including the topic, focus, and modality/mood of a sentence. The next two sections review works on both the local and broad context in tone production, and when possible, their application in machine learning of tones.
 
 
 
@@ -226,15 +230,15 @@ In particular, previous works have identified the two levels of sources for tone
 \subsubsection{Local context}
 The local context of tone production is concerned with the behavior of tone contour F0 trajectories with regard to its immediate environment, i.e., adjacent syllables. To study only the local context, experiments are often conducted with two principles in mind: first, to examine the effect of neighboring tones, speech production tasks are designed to reflect all different combinations of tones as target words. Second, to minimize the effect of higher level intonation, participants are asked to read the target words embedded in carrier sentences with careful speech of neutral focus. Several important results emerge from these studies of the local context. 
 
-(1) \textbf{Local "conflicting" context distorts tone contour shapes in incompatible environments.} [Xu 1994] studied how the amount of deviation of a tone from its canonical form due to coarticulation varied depending on the nature of the tonal context. By grouping tone environments into "compatible" vs "conflicting" contexts, it was observed that in a context where adjacent tonal values agree (a "compatible" context, such as when the High tone "HH" ending with "H" is followed by a High-Falling tone "HL" beginning also with "H")\footnote{The "H"(High),"L"(Low) refers to phonological compositional representation of tones, where for example, a rising tone is represented as "LH" with two pitch targets: low and high. }, the deviation was relatively small. In a context where adjacent tonal values disagree (a "conflicting" context, such as when the said High tone is followed by a Low-Rising tone "LH" starting with "L"), the deviation was much greater, sometimes even to the extent of changing the direction of a dynamic tone.\footnote{The authors refer to tones with moving targets as "dynamic tone" (such as a low-rising tone), vs. static tone, where the tone has stable pitch targets (such as a high tone). } 
+(1) \textbf{Local "conflicting" context distorts tone contour shapes in incompatible environments.} [Xu 1994] studied the variability of the tone contour shapes due to coarticulation, depending on the nature of the tonal context. By grouping tone environments into "compatible" vs "conflicting" contexts, it was observed that in a context where adjacent tonal values agree (a "compatible" context, such as when the High tone "HH" ending with "H" is followed by a High-Falling tone "HL" beginning also with "H")\footnote{The "H"(High),"L"(Low) refers to phonological compositional representation of tones, where for example, a rising tone is represented as "LH" with two pitch targets: low and high. }, the deviation was relatively small. In a context where adjacent tonal values disagree (a "conflicting" context, such as when the said High tone is followed by a Low-Rising tone "LH" starting with "L"), the deviation was much greater, sometimes even to the extent of changing the direction of a dynamic tone.\footnote{The authors refer to tones with moving targets as "dynamic tone" (such as a low-rising tone), vs. static tone, where the tone has stable pitch targets (such as a high tone). } 
 
-The author also examined the perception of co-articulated tones when tones are presented out of context in isolation. The results suggest that identification of tones in the compatible context was highly accurate with or without the original tonal context. Tonal identification for the conflicting context remained accurate only when the tones were presented with the original tonal context. Without the original context, i.e., in isolation, correct tone identification dropped below chance. As discussed above, this result provides important counter-evidence to the "myth" in tone recognition literature that human listeners are always able to recognize tones with high accuracy, even when they're distorted and in isolation. 
-
-
+The author also examined the perception of co-articulated tones when tones are presented out of context in isolation. The results suggest that identification of tones in the compatible context was highly accurate with or without the original tonal context. Tonal identification for the conflicting context remained accurate only when the tones were presented with the original tonal context. Without the original context, i.e., in isolation or in artificially altered tone context, correct tone identification dropped below chance. As discussed above, this result provides important counter-evidence to the "myth" in tone recognition literature that human listeners are always able to recognize tones with high accuracy, even when they're distorted and in isolation. 
 
 
 
-(2) \textbf{Carry-over effects is greater than anticipatory effects in tone co-articulation.} [Xu 1997] examines acoustic variations of tones in Mandarin under the influence of different tonal contexts. In particular, variations in the four Mandarin tones due to anticipatory and carry-over effects are analyzed by examining the time course of f0 contours of bi-tonal sequences. Using balanced nonsense sequences produced in different carriers with balanced tonal structures, this study establishes a baseline for local contextual tonal variation in Mandarin. It is found that anticipatory and carry-over tonal influences differ both in magnitude and in nature. Carry-over effects are mostly assimilatory: the starting f0 of a tone is assimilated to the offset value of a previous tone. Anticipatory effects, on the other hand, are mostly dissimilatory: a low onset value of a tone raises the maximum f0 value of a preceding tone. While the magnitude of the carry-over effect is large, anticipatory effects are relatively small. This conclusion has been cited many times subsequently by tone recognition researchers, whose own data analysis also showed support for this asymmetry over and over again[Surendran 2007, Zhang and Hirose 2004, Levow 2005]. There are also many machine learning approaches that take this effect into consideration in tone modeling.  
+
+
+(2) \textbf{Carry-over effect is greater than anticipatory effect in tone co-articulation.} In a pair of consecutively articulated syllables, does the tone shape of the first syllable have more impact on the tone shape of the second syllable, or vice versa? [Xu 1997] paid attention to the distortion of tones due to anticipatory and carry-over effects by examining the bigrams of F0 contours in pairwise syllable sequences. Anticipatory effect is defined as the change of the tone contour shapes in the current syllable in anticipation of the next. Carryover effect is seen as the change of tone contour shapes in the current syllable due to the prolonged effect of the preceding tone. Using balanced nonsense sequences produced in different carrier sentences with balanced tonal structures, this study establishes a baseline for local contextual tonal variation in Mandarin. It is found that anticipatory and carry-over tonal influences differ both in magnitude and in nature. Carry-over effects are mostly assimilatory: the starting F0 of a tone is assimilated to the offset value of a previous tone. Anticipatory effects, on the other hand, are mostly dissimilatory: a low onset value of a tone raises the maximum F0 value of a preceding tone. While the magnitude of the carry-over effect is large, anticipatory effects are relatively small. This conclusion has been cited many times subsequently by tone recognition researchers, whose own data analysis also showed support for this asymmetry over and over again[Surendran 2007, Zhang and Hirose 2004, Levow 2005]. There are also many machine learning approaches that take this effect into consideration in tone modeling.  
 
 %need more comments
 (3) \textbf{Physiological constraints of tone co-articulation. } [Xu and Sun 2002] studied the maximum speed of pitch change in human speech production, which contributes to the understanding of the underlying mechanism for tone co-articulation and its implication for tone modeling.  In this experiment, subjects (native speakers of English and Mandarin) produced rapid successions of pitch shifts by imitating synthesized model pitch undulation patterns. Results show that excursion time is nearly twice as long as response time in completing a pitch shift. Comparisons of this experimental data with real speech data suggest that the maximum speed of pitch change is often approached in speech, and the role of physiological constraints in tone production is greater than has been appreciated. 
@@ -285,7 +289,7 @@ In [Xu 1999] , the author further examined how lexical tone and focus contribute
 
 (f) the effects of topic, focus, downstep and sentence length are largely cumulative.
 
-As with other experimental findings reviewed in this section, the crucial question is how can we incorporate this knowledge to improve tone recognition accuracy. 
+As with other experimental findings reviewed in this section, the crucial question is how can we incorporate these fine-grained differences in machine learning algorithms to improve tone recognition accuracy. As will be discussed later, current methods tend to compensate for the global pitch shift patterns in a catch-all framework rather than distinguishing different communicative functions. 
 
 %me: the cumulative nature of the different functions is said to support the PENTA model, which cumulatively encode and add the effects of each communicative function.
 
@@ -300,15 +304,14 @@ As with other experimental findings reviewed in this section, the crucial questi
 
 \subsection{Prosodic modeling}
 
-Research in prosodic modeling provides evidence and often validation to the results obtained from speech production experimental works in tone variability. It is also closely related to the machine learning of tones with different goals. The goal of prosodic modeling is to analyze and synthesize speech prosody that is as natural as possible, while requiring less resources in storage, computation, and supervision. These models are often used to generate F0 contours for speech synthesis. As such, typically prosodic models are evaluated by means of its capability to (1) re-synthesize speech melodies that closely approximate the original data (training data) ; (2) predicatively synthesize / generate speech melodies of unseen data given annotated sentence and syllable conditions (i.e., input features). Most systems include an evaluation of (1) but only few aim to do (2).
-
+Research in prosodic modeling provides evidence and often validation to the results obtained from speech production experimental works mentioned above. It is also closely related to the machine learning of tones, but with different goals. The goal of prosodic modeling is to analyze prosodic patterns and synthesize speech prosody that is as natural as possible, while requiring less resources in storage, computation, and supervision. These models are often used to generate F0 contours for speech synthesis. As such, typically prosodic models are evaluated by means of its capability to (1) re-synthesize speech melodies that closely approximate the original data (training data) ; (2) predicatively synthesize / generate speech melodies of unseen data given annotated sentence and syllable conditions (i.e., input features). 
 
 %what are we most interested in in prosodic modeling?
 %  representation of intonation and tone; modeling of F0 generation process
 
 Meanwhile, on a different level, prosodic modeling is also associated with the theoretical aspect of the representation of speech intonation in the suprasegmental domain of phonology, and the underlying mechanism for the production and perception of speech prosody [Xu 2011]. While the current project is not concerned with either the generation of F0 contours for speech synthesis or the phonological and psycholinguistic theory of speech production and perception, there are a few aspects in prosodic modeling that can shed light on the machine learning of tones. Specifically, the representation of intonation is directly relevant to the choice of the type of feature vectors we use in tone recognition. Moreover, the modeling of F0 generation process can also provide clues as to how tone variability occurs in real-time spontaneous speech. 
 
-In the next two sections, I follow the convention in speech prosodic modeling [Sun 2002] and divide the review of relevant works into two parts: phonology-based and phonetic-based models\footnote{There has been theoretical discussions and debates [Xu 2011; Ramadoss 2009] on which type of model is a more truthful representation to the speech production mechanism, which this project is not concerned with. }. One of the phonetic-based models of particular interest to Mandarin is the quantitative Target Approximation model [Xu et al 1999], which I will discuss separately. This model was developed specifically with Mandarin tones in mind, while it has been also generalized to be a language independent model.  
+In the next two sections, I follow the convention in speech prosodic modeling [Sun 2002] and divide the review of relevant works into two parts: phonology-based and phonetic-based models\footnote{There has been theoretical discussions and debates [Xu 2011; Ramadoss and Wilson 2009] on which type of model is a more truthful representation to the speech production mechanism, which this project is not concerned with. }. One of the phonetic-based models of particular interest to Mandarin is the quantitative Target Approximation model [Xu et al 1999], which I will discuss separately. This model was developed specifically with Mandarin tones in mind, while it has been also generalized to be a language independent model.  
   
 
 
@@ -318,7 +321,7 @@ In the next two sections, I follow the convention in speech prosodic modeling [S
 
 
 \begin{comment}
-%In contrast to learning a representation of F0 trajectories (as exemplified by [Gauthier et al 2007] and this paper), other researchers have approached tone modeling by taking into account the phonological processing of tone production and perception. [Moren and Zsiga 2006] in their study on Thai, vary from the standard notion of associating targets to syllables, but instead propose a model of tone phonology which involves associating tone targets with the syllable moras. Building on this work and the gating experiments [Lai:08]that showed the predictive nature of tone perception, [Ramadoss 2009] proposed a Bayesian-inference based tone recognition model that predictively compute the probabilities of incoming tone signals based on past exposure to tones in Thai. Ramadoss commented that "While these maps [in [Gauthier et al 2007]] may achieve perceptually equivalent results, the predictions are different. The main point to note is that this model does not refer to the phonology of tone. The tones are encoded as strings of f0 values that are matched point-by-point with category values. Hence, according to this model, tone perception is uninformed by phonology, and is simply a matching process between incoming f0 values and a category template." In this alternative phonologically informed view, instead, with the general notion of tonal targets, production of tones can be thought of as an interpolation between the various targets, and hence perception of tones in understood as an attempt to identify these targets. Since each tone category has a specific target template, based on the tones associated to its syllable moras, categorizing tones reduces to matching the identified targets to the templates [Ramadoss 2009].
+%In contrast to learning a representation of F0 trajectories (as exemplified by [Gauthier et al 2007] and this paper), other researchers have approached tone modeling by taking into account the phonological processing of tone production and perception. [Moren and Zsiga 2006] in their study on Thai, vary from the standard notion of associating targets to syllables, but instead propose a model of tone phonology which involves associating tone targets with the syllable moras. Building on this work and the gating experiments [Lai:08]that showed the predictive nature of tone perception, [Ramadoss 2009] proposed a Bayesian-inference based tone recognition model that predictively compute the probabilities of incoming tone signals based on past exposure to tones in Thai. Ramadoss commented that "While these maps [in [Gauthier et al 2007]] may achieve perceptually equivalent results, the predictions are different. The main point to note is that this model does not refer to the phonology of tone. The tones are encoded as strings of F0 values that are matched point-by-point with category values. Hence, according to this model, tone perception is uninformed by phonology, and is simply a matching process between incoming F0 values and a category template." In this alternative phonologically informed view, instead, with the general notion of tonal targets, production of tones can be thought of as an interpolation between the various targets, and hence perception of tones in understood as an attempt to identify these targets. Since each tone category has a specific target template, based on the tones associated to its syllable moras, categorizing tones reduces to matching the identified targets to the templates [Ramadoss 2009].
 \end{comment}
 
 
@@ -347,14 +350,14 @@ The most influential example of the phonological representation of tone and into
 
 
 
-The main idea of Pierrehumbert’s model and the AM approach is that tone and intonation can be represented compositionally by two types of tones: High(H) and Low(L). In the autosegmental representation of tones, a Register feature is proposed [Yip 1980] to represent H and L tones in the upper or lower register, allowing representation of up to five levels according to a division in pitch range. The AM representation also entails that associations between tones and TBU's are not necessarily one-to-one. Contours, therefore, can be represented as a sequence of tones associated to a single TBU: HL (Fall) or LH (Rise) [Zsiga 2013]. 
+The main idea of Pierrehumbert’s model and the AM approach is that tone and intonation can be represented compositionally by two types of tones: High(H) and Low(L). In the autosegmental representation of tones, a \textit{Register} feature is proposed [Yip 1980] to represent H and L tones in the upper or lower register, allowing representation of up to five levels according to a division in pitch range. The AM representation also entails that associations between tones and TBU(Tone Bearing Unit)'s are not necessarily one-to-one. Contours, therefore, can be represented as a sequence of tones associated to a single TBU: HL (Fall) or LH (Rise) [Zsiga 2013]. 
 
 %The tone inventory include: \textit{Pitch Accents} can be either single tones (H*, L*) or bitonal (H*+L, H+L*, L*+H, L+H*). The * symbol represents the alignment of a tone with the accented syllable. \textit{Boundary tones}, denoted by the “\%” symbol, are single High or Low tones aligned with the edges of a phrase (H\%, L\%). Thus, they indicate the onset and offset pitch of an intonational phrase, respectively. \textit{Phrase accents}, indicated by the “-“ symbol, are used to represent the pitch movement between a pitch accent and a boundary tone (H-, L-).
 
 In terms of intonation, Pierrehumbert’s model has a linear structure in that intonation is solely determined by a local component, which is in contrast to the superpositional approach which treats intonation resulting from the addition of several components, such as a local pitch accent and a global phrase contour. The mapping from phonology onto acoustics and physiology is a dynamic interpretative process [Pierrehumbert and Beckman 1988], where phonetic realization rules are applied to convert abstract tonal representation into F0 contours by considering the metrical prominence of the syllables and the temporal alignment of the tones with the accented syllables [Pierrehumbert 1981]. 
 
 
-In addition to prosody synthesis, phonological models can also be used to learn and recognize tones. For example, [Ramadoss and Wilson 2009] adopted a phonological view in the probabilistic tone recognition model for Thai (based on the theory from [Moren and Zsiga 2006]). In this study, since each tone category is modeled to have a specific target template associated with its Tone Bearing Unit (TBU, mora in this case), categorizing tones reduces to matching the identified targets to the templates.
+In addition to prosody representation and synthesis, phonological models can also be used to learn and recognize tones. For example, [Ramadoss and Wilson 2009] adopted a phonological view in the probabilistic tone recognition model for Thai (based on the theory from [Moren and Zsiga 2006]). In this study, since each tone category is modeled to have a specific target template associated with its TBU (mora in this case), categorizing tones reduces to matching the identified targets to the templates.
 
 However, in current Mandarin tone recognition literature, few have considered this phonological approach, possibly due to the general lack of familiarity with phonological theory in the machine learning community, as well as the challenge of incorporating the general abstract symbolic representation of tonal targets into a machine learning framework in context-dependent modeling.
 
@@ -362,7 +365,7 @@ However, in current Mandarin tone recognition literature, few have considered th
 \subsubsection{Phonetic-based models}
 
 %overview of phonetic models
-Phonetic models use a set of continuous parameters to describe intonation patterns observable in an F0 contour [Taylor 2000]. An important goal is that the model should be capable of reconstructing F0 contours faithfully when appropriate parameters are given. However, as many researchers have pointed out, a phonetic model should also be linguistically meaningful, as it is not a difficult task to accurately represent F0 contour by some polynomial function. The real challenge is to develope a model whose parameters are predictable from available linguistic information[Sun 2002].
+Phonetic models use a set of continuous parameters to describe intonation patterns observable in an F0 contour [Taylor 2000]. An important goal is that the model should be capable of reconstructing F0 contours faithfully when appropriate parameters are given. However, as many researchers have pointed out, a phonetic model should also be linguistically meaningful, as it is not a difficult task to accurately represent F0 contour by some polynomial function. The real challenge is to develope a model whose parameters are predictable from available linguistic information [Sun 2002]. Here I describe several representative phonetic models of relevance.
 
 
 % Fujisaki model
@@ -424,7 +427,7 @@ The qTA model extracts function-specific model parameters from natural speech au
 
 
 
-The computational tools for extracting parameters and performing re-synthesis based on qTA model have been developed in Praat Scripting Language (PSL). In the early version of this tool (PENTATrainer1\footnote{Downloaded from http://www.homepages.ucl.ac.uk/~uclyyix/PENTAtrainer1/.}), parameter optimization is achieved by an exhaustive search through the parameter space via error minimization algorithms[Prom-on et al 2009]. The local parameter sets learned from this process are then summarized into categorical ones by averaging across individual occurrences of the same functional categories [Prom-on et al 2009]. While the synthesis results did closely approximate the original F0 contours, there are few disadvantages of this strategy. First, the estimated parameters are optimal for the local syllable but not necessarily for the functional categories. Second, the estimation of $\lambda$ is often not satisfactory because it may be stuck at a local minimum and fails to converge to global minimum[Xu and Prom-on 2014]. 
+The computational tools for extracting parameters and performing re-synthesis based on qTA model have been developed in Praat Scripting Language (PSL). In the early version of this tool (PENTATrainer1\footnote{Downloaded from http://www.homepages.ucl.ac.uk/~uclyyix/PENTAtrainer1/.}), parameter optimization is achieved by an exhaustive search through the parameter space via error minimization algorithms[Prom-on et al 2009]. The local parameter sets learned from this process are then summarized into categorical ones by averaging across individual occurrences of the same functional categories [Prom-on et al 2009]. While the synthesis results did closely approximate the original F0 contours, there are a few disadvantages of this strategy. First, the estimated parameters are optimal for the local syllable but not necessarily for the functional categories. Second, the estimation of $\lambda$ is often not satisfactory because it may be stuck at a local minimum and fails to converge to global minimum[Xu and Prom-on 2014]. 
 
 
 To address this problem and upgrade the qTA model to include more features reflecting function-related variability, [Xu and Prom-on 2014] developed PENTAtrainer 2 using stochastic learning from real speech data with annotations of metadata information about the sentences (referred to as layered pseudo-hierarchical functional annotation scheme, which requires the manual labeling of only the temporal domains of the functional units). More specifically, each syllable is annotated with its syllable boundaries, tone categories of the current and adjacent tones, focus / stress status, and associated sentential modality (see \figref{fig:PENTA2}). Overall, this version is characterized by its use of a functional annotation scheme, and training from the annotated data to obtain the parameter values, making it more explicitly a standard machine learning approach that encodes various types of input features. In this respect, it is unlike prosodic modeling approaches typical in previous literature. It also has the ability to predicatively generate synthesized speech melody on unseen data, given that the test data are also annotated in this set of input feature labels. The authors argue that this set of annotation is much less labor intensive than traditional frameworks. 
@@ -458,7 +461,7 @@ To address this problem and upgrade the qTA model to include more features refle
 [Xu, Lee, Prom-on and Liu in press] comments on the advantage of such a learning model using the example of how to learn tone sandhi in this framework (below). This is an expected effect of the model if we consider it from a machine learning perspective:
 
 \begin{quote}
-...tone sandhi (Chen 2000). For example, the Mandarin Tone 3 is changed to T2 when followed by another Tone 3. With PENTAtrainer2 this rule can be operationalized as the result of an interaction between two functions: lexical tonal contrast and boundary-marking. That is, the pitch target to be implemented in articulation is jointly determined by the morphemic tone of the current syllable, the morphemic tone of the next syllable, and by the strength of the boundary between the two syllables. Such functional interaction may allow T3 to develop a pitch target variant that happens to be similar to that of another tone, e.g., T2. But the two do not need to be identical, since the functional combinations are not the same. As found in Xu and Prom-on (2014), the best modelling result was obtained when the sandhi T3 was allowed to learn its own target, rather than when it was forced to use the T2 target. This result is consistent with the empirical finding of subtle yet consistent differences between the original and sandhi-derived T2 in Mandarin (Peng 2000, Xu 1997). Thus the obligatoriness of associating a unique target to each functional combination may have led to the development of tone sandhi in the first place. But further research along this line is needed."
+...tone sandhi (Chen 2000). For example, the Mandarin Tone 3 is changed to T2 when followed by another Tone 3. With PENTAtrainer2 this rule can be operationalized as the result of an interaction between two functions: lexical tonal contrast and boundary-marking. That is, the pitch target to be implemented in articulation is jointly determined by the morphemic tone of the current syllable, the morphemic tone of the next syllable, and by the strength of the boundary between the two syllables. Such functional interaction may allow T3 to develop a pitch target variant that happens to be similar to that of another tone, e.g., T2. But the two do not need to be identical, since the functional combinations are not the same. As found in Xu and Prom-on (2014), the best modelling result was obtained when the sandhi T3 was allowed to learn its own target, rather than when it was forced to use the T2 target. This result is consistent with the empirical finding of subtle yet consistent differences between the original and sandhi-derived T2 in Mandarin (Peng 2000, Xu 1997). Thus the obligatoriness of associating a unique target to each functional combination may have led to the development of tone sandhi in the first place. But further research along this line is needed.
 \end{quote}
 %This paper is not closely relevant to what I do, but it is a good review of a system that generates prosodic patterns for sentences. it might serve as an inspiration, and of course it has served as a candidate of feature representation of unsupervised learning. Maybe we could elaborate and see what other feature representations can be better based on this article.
 
@@ -494,24 +497,24 @@ This point is well supported by many experimental works. For example, [Liu et al
 
 
 \section{Supervised learning of Mandarin tones}
-Supervised learning is the predominant approach in Mandarin tone learning research. In our current project, a successful unsupervised learning framework must learn from the supervised learning literature. Recent years have seen the renewed interest in improving tone recognition using context-dependent models in supervised learning frameworks. These improvements include better understanding of the features used in tone recognition, and the effort to utilize contextual information to recover underlying tone targets. These techniques will be reviewed in the next two sections. In Section \ref{nucleus}, we also review works that attempts to recover underlying tone targets by identifying the most relevant "nucleus" region in the syllable F0 contour.
+Supervised learning is the predominant approach in Mandarin tone machine learning research. In our current project, a successful unsupervised learning framework must learn from the supervised learning literature. Recent years have seen the renewed interest in improving tone recognition using context-dependent models in supervised learning frameworks. These improvements include better understanding of the features used in tone recognition, and the effort to utilize contextual information to recover underlying tone targets. These techniques will be reviewed in the next two sections. In Section \ref{nucleus}, we also review works that attempts to recover underlying tone targets by identifying the most relevant "nucleus" region in the syllable F0 contour.
 
 %look at how some papers summarized this literature organizationally
 
 % mention why supervised learning is useful for unsupervised learning (1) features (2) problems and adjustment - ask Wilson
 
-\subsection{Feature representation and selection}
+\subsection{Feature selection}
 
 %[Surendran 2007] dissertation
 Intuitively, F0 contour is the most (and only) relevant feature of tones. However, the problem of using F0 features, as discussed above, lies in its variability in running speech. To improve tone recognition accuracy beyond the constraints of using F0, there has been many efforts to identify and develop other useful features that can be extracted from the speech signal. 
 
-[Surendran 2007] concentrated on solving this problem by carefully and incrementally testing and (creatively) identifying effective features in all dimensions. In this dissertation, the author conducted hundreds of experiments on a variety of datasets of broadcast speech to determine the effectiveness of a set of 68 features involving pitch, duration, and overall intensity.  The results suggest that (1) modifying the pitch and intensity of a syllable based on its neighbors was useful (pitch normalization by subtracting the mean pitch of the preceding syllable). (2) Among the twenty voice quality measures used in tone recognition, energy in various frequency bands was the most useful. (3) Further experiments determined a set of 60 band energy features that greatly aided the recognition of low and neutral tones. However, the recall for low tones remained below fifty percent. (4) Tone context (knowing the tones of surrounding syllables) did not help as much one would have expected, suggesting our features are already capturing a lot of contextual information. (5) Stronger syllables (such as focus) were easier to recognize in lab speech, but the effect was much less for broadcast speech. 
+[Surendran 2007] concentrated on solving this problem by carefully and incrementally testing and (creatively) identifying effective features in all dimensions. In this dissertation, the author conducted hundreds of experiments on a variety of datasets of broadcast speech to determine the effectiveness of a set of 68 features involving pitch, duration, and overall intensity.  The results suggest that (1) modifying the pitch and intensity of a syllable based on its neighbors was useful (pitch normalization by subtracting the mean pitch of the preceding syllable). (2) Among the twenty voice quality measures used in tone recognition, energy in various frequency bands was the most useful. (3) Further experiments determined a set of 60 band energy features that greatly aided the recognition of low and neutral tones. However, the recall for low tones remained below fifty percent. (4) Tone context (knowing the tones of surrounding syllables) did not help as much as one would have expected, suggesting the other features are already capturing a lot of contextual information. (5) Stronger syllables (such as focus) were easier to recognize in lab speech, but the effect was much less for broadcast speech. 
 
 %Kristen Yu's dissertation
-In another doctoral dissertation, [Yu 2011] investigated a similar problem by asking how is tone learned (by machines) and acquired (by humans) from the speech signal through the available information in various phonological spaces (such as F0 and voice quality). The author concentrated her investigation on Cantonese but also included a variety of tone language data such as Mandarin. The results show evidence from human perceptual experiments and computational modeling: (i) motivating a temporal domain from the speech signal for tonal maps beyond the span of a single syllable, and (ii) demonstrating that voice source parameters beyond f0 must be included for characterizing phonetic spaces for tonal maps in a wide range of languages. Essentially these speak of the importance of context and voice quality, although from a language acquisition perspective. 
+In another doctoral dissertation, [Yu 2011] investigated a similar problem by asking how is tone learned (by machines) and acquired (by humans) from the speech signal through the available information in various phonological spaces (such as F0 and voice quality). The author concentrated her investigation on Cantonese but also included a variety of tone language data such as Mandarin. The results show evidence from human perceptual experiments and computational modeling: (i) motivating a temporal domain from the speech signal for tonal maps beyond the span of a single syllable, and (ii) demonstrating that voice source parameters beyond F0 must be included for characterizing phonetic spaces for tonal maps in a wide range of languages. Essentially these speak of the importance of context and voice quality, although from a language acquisition perspective. 
 
 %Xu and whalen
-The correlates of intensity to tones have been demonstrated in early works of speech experiments. In a series of intriguingly designed tone perception judgment experiments, [Xu and Whalen 1992] tests the information presents in the amplitude contours and in brief segments of Mandarin tones. In the first two experiments, the researchers used a signal-correlated noise (by adding samples with flipped signs to the original samples such that the amplitude is unchanged but the F0 and formant structure information is removed) to obtain the amplitude contours of the tones without retaining information of F0 and formants. The results showed that Mandarin speakers are able to identify tones with high accuracy using only amplitude contour information (although later it was shown that amplitude values correlate highly with absolute F0 values for tone 2,3, and 4). In experiment 3 and 4, the authors extracted brief tone segments of variable length using a hamming window, and tested which the accuracy of tone identification at each position along the tone contour (e.g., onset at 0ms,20ms,40ms,etc., from the beginning of the tone contour). The result suggests (somewhat unsurprisingly) that tone 2 and tone 4 are identified with better accuracy when movements of the segments are similar to their respective movement trajectories (i.e., rising for tone 2 and falling for tone 4). For tone 1 and tone 3, the listeners identified more accurately when there are little pitch movement, using differences of absolute F0 (lower sounding pitch judged as tone 3). This indicates the pitch register effect of the tone perception, which is largely unexplored in previous research.
+The correlates of intensity to tones have been demonstrated in early works of speech experiments. In a series of intriguingly designed tone perception judgment experiments, [Xu and Whalen 1992] tests the information presents in the amplitude contours and in brief segments of Mandarin tones. In the first two experiments, the researchers used a signal-correlated noise (by adding samples with flipped signs to the original samples such that the amplitude is unchanged but the F0 and formant structure information is removed) to obtain the amplitude contours of the tones without retaining information of F0 and formants. The results showed that Mandarin speakers are able to identify tones with high accuracy using only amplitude contour information (although later it was shown that amplitude values correlate highly with absolute F0 values for tone 2,3, and 4). In experiment 3 and 4, the authors extracted brief tone segments of variable length using a hamming window, and tested which the accuracy of tone identification at each position along the tone contour (e.g., onset at 0ms,20ms,40ms,etc., from the beginning of the tone contour). The result suggests (somewhat unsurprisingly) that tone 2 and tone 4 are identified with better accuracy when movements of the segments are similar to their respective movement trajectories (i.e., rising for tone 2 and falling for tone 4). For tone 1 and tone 3, the listeners identified more accurately when there are little pitch movement, using differences of absolute F0 (lower sounding pitch judged as tone 3). This indicates the pitch register effect of the tone perception, which is largely unexplored in previous research. The information in intensity contours are subsequently used in computational works to identify the nucleus region of tones [Wang and Levow 2011], to be discussed in Section \ref{nucleus}.
 
 
 \subsection{Context-dependent modeling}
@@ -529,12 +532,12 @@ The first set of features (\textit{difference features}) correspond to differenc
 
 The context dependent features are found to consistently outperform context independent features. The result of additional contrastive experiments suggest that left tone context is much more important than right context in tone category identification. In fact, the right context is shown to decrease the performance of the classifier. This result is consistent with speech perception/production experimental results from previous work [Xu 2001] that the tone co-articulation effect is asymmetric. 
 
-The broader context feature mainly includes the F0 compensation for down drift (similar to [Wang and Seneff 2000]). The author used the median slope per syllable \textit{across the entire corpus} as phrase-based falling contour compensation. As [Wang and Seneff 2000] did, [Levow 2005] found the alternative compensation strategy based on \textit{individual phrase} slope (i.e., build a linear model for each phrase, instead of using a global slope across the corpus) overfit to the specific tone configuration reduced accuracy. In the phrase based feature representation, each pitch value is thus replaced with an estimate of the pitch value with downdrifting removed, by adding back the estimated pitch drop to pitch values later in the phrase. The result showed improvements in classification accuracy. The author commented that since the phrase segmentation employed here was very simple, it is expected that more nuanced approach with finer grained phrase boundary and possibly phrase accent detection would likely yield greater benefit.
+The broader context feature mainly includes the F0 compensation for down drift (similar to [Wang and Seneff 2000]). The author used the median slope per syllable \textit{across the entire corpus} as phrase-based falling contour compensation. As [Wang and Seneff 2000] did, [Levow 2005] found the alternative compensation strategy based on \textit{individual phrase} slope (i.e., build a linear model for each phrase, instead of using a global slope across the corpus) overfit to the specific tone configuration and reduced accuracy. In the phrase based feature representation, each pitch value is thus replaced with an estimate of the pitch value with downdrifting removed, by adding back the estimated pitch drop to pitch values later in the phrase. The result showed improvements in classification accuracy. The author commented that since the phrase segmentation employed here was very simple, it is expected that more nuanced approach with finer grained phrase boundary and possibly phrase accent detection would likely yield greater benefit.
 
 
 
 
-[Wang and Levow 2011] proposed a tone recognition approach that employs linear chain Conditional Random Fields (CRF\footnote{CRF is a probabilistic graphic model.}) to model tone variation due to intonation effects. Three linear chain CRFs are built, aimed at modeling intonation effects at phrase, sentence-and story-level boundaries. All linear-chain CRFs are found to outperform the baseline unigram model, and the biggest improvement is found in recognizing 3rd tones (4\%) in overall accuracy. In particular, Phrase Bigram CRFs show a 39\% improvement in recognizing 3rd tones located at initial boundaries. This improvement shows that the position specific modeling of initial tones in bigram CRFs captures the intonation effects better than the baseline unigram model.
+[Wang and Levow 2011] proposed a tone recognition approach that employs linear chain Conditional Random Fields (CRF\footnote{CRF is a probabilistic graphic model that can be seen as similar to Hidden Markov Model (HMM) for sequence modeling and inference. Crucially, while HMM is a generative model, CRF is a discriminative model.}) to model tone variation due to intonation effects. Three linear chain CRFs are built, aimed at modeling intonation effects at phrase, sentence-and story-level boundaries. All linear-chain CRFs are found to outperform the baseline unigram model, and the biggest improvement is found in recognizing 3rd tones in overall accuracy. In particular, Phrase Bigram CRFs show a 39\% improvement in recognizing 3rd tones located at initial boundaries. This improvement shows that the position specific modeling of initial tones in bigram CRFs captures the intonation effects better than the baseline unigram model.
 
 
 
@@ -612,7 +615,7 @@ Other tone recognition researchers have sought to identify the most relevant reg
 
 %%%%%%%%%%%%%%%%% U N S U P E R V I S E D         LEARNING
 \section{ Unsupervised learning of Mandarin tones}
-There has been limited effort on the unsupervised learning of tones. It is well known that most supervised learning framework must rely on a large amount of manual annotation effort that is costly in time and money [Levow 2006b]. This annotation bottleneck as well as a theoretical interest in the learning of tone motivates the use of unsupervised or semi-supervised approaches to tone recognition [Levow 2006a]. Another motivation to explore unsupervised learning is to understand the process of language acquisition, as child learners must identify these linguistic categories without explicit instruction by observation of natural language interaction[Levow 2006b]. As such, the goal of unsupervised learning frameworks is to improve the accuracy of tone learning algorithms with minimum supervision and human labeled data.
+There has been limited effort on the unsupervised learning of tones. It is well known that most supervised learning frameworks must rely on a large amount of manual annotation effort that is costly in time and money [Levow 2006b]. This annotation bottleneck as well as a theoretical interest in the learning of tone motivates the use of unsupervised or semi-supervised approaches to tone recognition [Levow 2006a]. Another motivation to explore unsupervised learning is to understand the process of language acquisition, as child learners must identify these linguistic categories without explicit instruction by observation of natural language interaction[Levow 2006b]. As such, the goal of unsupervised learning frameworks is to improve the accuracy of tone learning algorithms with minimum supervision and human labeled data.
 
 
 
@@ -669,7 +672,7 @@ The feature set used in this study is well informed by previous work on tone lea
 	
 	
 	
-[Levow 2006b] further explored semi-supervised learning for this task, using the Manifold Regularization framework [Belkin et al., 2004]. This framework postulates an underlying intrinsic distribution on a low dimensional manifold for data with an observed, ambient distribution that may be in a higher dimensional space with pairwise distances preserved. This paper uses Laplacian Support Vector Machines, a semi-supervised classification algorithm, which allows training and classification based on both labeled and unlabeled training examples. For each Mandarin data set, for each class, the model uses a small set (40) of labeled training instances in conjunction with 60 unlabeled instances, and tests on 40 instances. 
+[Levow 2006b] further explored semi-supervised learning for the tasks in [Levow 2006a], using the Manifold Regularization framework [Belkin et al 2004]. This framework postulates an underlying intrinsic distribution on a low dimensional manifold for data with an observed, ambient distribution that may be in a higher dimensional space with pairwise distances preserved. More specifically, this paper uses Laplacian Support Vector Machines, a semi-supervised classification algorithm, which allows training and classification based on both labeled and unlabeled training examples. For each Mandarin data set, for each class, the model uses a small set (40) of labeled training instances in conjunction with 60 unlabeled instances, and tests on 40 instances. 
 	
 	
 The semi-supervised classifier achieved comparable results with the unsupervised algorithm (see Table \ref{table:unsupsup}). Interestingly, the semi-supervised classifier also reliably outperforms an SVM classifier with an RBF kernel trained on the same labeled training instances. 
@@ -729,9 +732,9 @@ kind of chapter format, maybe could be more like lit review and not text book.
 \section{Speech prosody mining using time-series mining techniques}
 Another dimension of unsupervised learning of tones is the data mining of speech prosody in a large spoken or intonation corpus [Raskinis and Kazlauskiene 2013]. The goal of this endeavor is the improved understanding of speech intonation and tone contour patterns through unsupervised data mining and pattern discovery algorithms using a large quantity of real speech data. Such patterns will also shed light on the nature of variability of tone in spontaneous speech and provide better features and context-dependent models for tone recognition modeling. 
 
-Previous works in corpus based intonation research [Raskinis and Kazlauskiene 2013, Zhang 2015] have shown the challenges of mining a large intonation corpus. At the core of this task is the expensive computation of a large amount of high-dimensional pairwise distance (especially with the widely preferred Dynamic Time Warping or DTW distance measure for time-series data) to obtain the distance matrix, and to find the most effective low-dimension feature representation for the F0 time-series data that faithfully preserve the true distances among objects with increased efficiency for storage.
+Previous works in corpus based intonation research [Raskinis and Kazlauskiene 2013, Zhang 2015] have shown the challenges of mining a large intonation corpus. At the core of this task is the expensive computation of a large amount of high-dimensional pairwise distance (especially with the widely preferred Dynamic Time Warping or DTW distance measure for time-series data) to obtain the distance matrix, and to find the most effective low-dimension feature representation for the F0 time-series data that faithfully preserve the true distances among objects, with increased efficiency for storage.
 
-[Zhang 2015] showed the potential of employing time-series data mining techniques to solve these problems, including techniques to speed up DTW distance computation [Rakthanmanon et al 2013] and to transform feature representations for both dimensionality reduction and efficiency of computation and storage [Lin 2003]. In fact, F0 contour data can be naturally viewed as time-series data with F0 on the y-axis and time on the x-axis. Time-series mining has been successfully applied in a number of fields that deal with various kinds of time-series, including (the most relevant for our current purposes) Music Information Retrieval (MIR), where F0 contour data from music signal are indexed and searched, and meaningful patterns discovered [Gulati et al 2014]. 
+[Zhang 2015] showed the potential of employing time-series data mining techniques to solve these problems, including techniques to speed up DTW distance computation [Rakthanmanon et al 2013] and to use symbolic feature representations for both dimensionality reduction and efficiency of computation and storage [Lin 2003]. In fact, F0 contour data can be naturally viewed as time-series data with F0 on the y-axis and time on the x-axis. Time-series mining has been successfully applied in a number of fields that deal with various kinds of time-series, including (the most relevant for our current purposes) Music Information Retrieval (MIR), where F0 contour data from music signal are indexed and searched, and meaningful patterns discovered [Gulati et al 2014]. 
 
 %where to put my specific results? 
 %first read lin's review and sankalp paper again. and Keogh.
@@ -809,7 +812,7 @@ Due to the typical high dimensionality of time-series data, feature representati
 
 
 \subsection{Time-series and $F_0$ feature representation}
-In Section \ref{sec:prosodic}, I have reviewed prosodic models and their relevance to feature representation of F0 contours in speech. Meanwhile, a great number of representations have been proposed for time-series mining, including both real-valued (such as DFT, DWT) and symbolic representations (Such as SAX). \figref{fig:ts-rep} illustrates the most commonly used representations [Lin 2010 ].
+In Section \ref{sec:prosodic}, I have reviewed prosodic models and their relevance to feature representation of F0 contours in speech. Meanwhile, a great number of representations have been proposed for time-series mining, including both real-valued (such as DFT, DWT) and symbolic representations (strings). \figref{fig:ts-rep} illustrates the most commonly used representations [Lin 2003]\footnote{Notice in this taxonomy, there is no representation that satisfies the lower bounding requirement under symbolic representation. We will discuss later that Symbolic Aggregate approXmiation (SAX) [Lin 2003] is the first symbolic representation to satisfy this condition, i.e., lower bounds the true distance of the original space. }.
 
 In the next sections I consider both types of feature representations (prosodic modeling based and time-series based) and discuss their strength and limitations.
 
@@ -835,7 +838,7 @@ In the next sections I consider both types of feature representations (prosodic 
  
 
 
-(2) \textbf{quantitative Target Approximation.} Given that qTA model (see section \ref{sec:qta}) has been shown to perform well in producing curves that closely resemble real tone contours in connected speech, an important question to be asked is: do qTA parameters perform well to reflect the similarities between tones in perception? In other words, we want to make sure that qTA parameters have the property where perceptually similar tone contour shapes also have similar parameter values. In [Zhang 2015]'s experiments the results suggest a negative answer to this question.
+(2) \textbf{quantitative Target Approximation.} Given that qTA model (see section \ref{sec:qta}) has been shown to perform well in producing curves that closely resemble real tone contours in connected speech, an important question to be asked is: do qTA parameters perform well to reflect the similarities between tones in perception? In other words, we want to make sure that qTA parameters have the property where perceptually similar tone contour shapes also have similar parameter values. In [Zhang 2015]'s experiments the results suggest a negative answer to this question. The poor performance of both polynomial and qTA features suggests that in order to use coefficients for features, the model from which the coefficients are derived must preserve the true distance between objects in the original space, a property that these two models don't have.
 
 
 (3) \textbf{Raw Time-series F0 Vector}. [Gauthier et al 2007] showed that unsupervised classification using Self-Organizing Map (Neural Network) yielded a nearly 80\% correct result when time-series are represented with a 30-point raw F0 vector. 
@@ -896,10 +899,11 @@ SAX has been evaluated in various classic time-series mining tasks and shown to 
 SAX has been less explored in the domain of audio signal F0 pattern mining. [Valero, Salamon and Gomez 2015] experimented with SAX representation for the computation of F0 contour similarity from music audio signals in a Query-By-Humming (QBH) task\footnote{In a query by humming task, a user hums a subsection of the melody of a desired song to search for the song from a database of music recordings.} in the context of Music Information Retrieval (MIR). However, results suggest that SAX does not perform well for musical time-series data in the context of QBH. The authors attribute this to the fact that SAX does not consider any particularities the origin domain of the time series may have - in this case, the musical notes. Thus, in the case of QBH, SAX may be abstracting away key musically-related information from the melodic contours required for properly performing the alignment (of F0 contour pairs). 
 
 
-%[zhang 2014,2015a,2015b]
-[Zhang 2014, 2015a, 2015b] showed the effectiveness of SAX in mining speech or speech-like F0 contours - tones, where fine, noisy details of the F0 contours do not carry substantial crucial information comparing to its global shape. In [Zhang 2014], musical F0 contours from Beijing opera singing are converted to SAX representations in order to compare its similarity to linguistic tones of its lyrics. In a manually constructed data set consisted of balanced F0 contour shapes from all four tones, four types of evaluation measures showed that SAX representation faithfully preserves the original clusters. Similarly, [Zhang 2015b] experimented with the SAX parameters by iterating through different combinations of \textit{w} and \textit{a} to find the best correlation with the perceived pitch relationships in pairwise contour analysis. In [Zhang 2015a], SAX is shown to perform significantly better than raw F0-based contour features when subjected to the K-means clustering algorithm (see details in Section \ref{sec:speech mining}). This result is similar to the experiment on the Space Shuttle telemetry data set considered by [Lin et al 2003], where the SAX outperformed original data due to the possible smoothing effect of SAX's dimensionality reduction. In this context, contrary to the MIR melodic retrieval, the "abstracting" of SAX becomes a strength of the algorithm.
+%[Zhang et al 2014,2015a,2015b]
+[Zhang et al 2014, 2015a, 2015b] showed the effectiveness of SAX in mining speech or speech-like F0 contours - tones, where fine, noisy details of the F0 contours do not carry substantial crucial information comparing to its global shape. In [Zhang et al 2014], musical F0 contours from Beijing opera singing are converted to SAX representations in order to compare its similarity to linguistic tones of its lyrics. In a manually constructed data set consisted of balanced F0 contour shapes from all four tones, four types of evaluation measures showed that SAX representation faithfully preserves the original clusters. Similarly, [Zhang et al 2015b] experimented with the SAX parameters by iterating through different combinations of \textit{w} and \textit{a} to find the best correlation with the perceived pitch relationships in pairwise contour analysis. In [Zhang 2015a], SAX is shown to perform significantly better than raw F0-based contour features when subjected to the K-means clustering algorithm (see details in Section \ref{sec:speech mining}). This result is similar to the experiment on the Space Shuttle telemetry data set considered by [Lin et al 2003], where the SAX outperformed original data due to the possible smoothing effect of SAX's dimensionality reduction. In this context, contrary to the MIR melodic retrieval, the "abstracting" of SAX becomes a strength of the algorithm.
 
-
+%[gaustuv]
+One strength of SAX is its ability to reduce the dimensionality of the original F0 contour (this is also termed "pitch quantization" in signal processing). This type of simplification is very useful in both addressing the "curse of dimensionality" problem, and to reduce cost and speed up computation. However, there are also many other variants of symbolic representation that can perform pitch quantization. One must choose the most appropriate variant according to the specific needs of the task at hand. For example, a property of SAX is that each segment used to represent the original time-series must be of the same length. This might not be an ideal situation in many applications (exemplified in [Zhang et al 2015b, Ganguli et al 2015]) where variable lengths segments are desired. The complexity of converting to such an variable-length representation may be greater than SAX, as one must design some criteria that decides whether the next frame of audio samples belong to the current segment or it should be the start of a new segment. 
 
 
 % distance measure, mindist, 
@@ -1011,9 +1015,12 @@ In practice, since DTW has a time complexity of \textit{O($n^2$)}, where \textit
 \begin{figure}
  \centerline{\framebox{
  \includegraphics[scale=0.6]{lbk.png}}}
- \caption{An algorithm that uses a lower bounding distance measure to speed up the sequential scan search for the query Q (adapted from [Ratanamahata et al 2012])}
+ \caption{An algorithm that uses a lower bounding distance measure to speed up the sequential scan search for the query Q (adapted from [Ratanamahatana et al 2004])}
  \label{fig:lbk}
 \end{figure}
+
+In the meantime, it is worth noting that the DTW distance, similar to Euclidean distance, is not immune to the biases existing in time-series data. For example, [Batista et al 2011] has shown that there exists a tendency for a high complexity time-series TS1 (higher degree of micro level variations) to obtain a high similarity score with a low complexity time-series TS3, when TS1 is obviously more similar to another high-complexity time-series TS2 (i.e., dist(TS1,TS2) \textgreater dist(TS1,TS3), where dist() is the distance function between the two time series). An illustration of this phenomenon is seen in \figref{fig:invar} [Gulati et al 2015b]. \figref{fig:invar} shows three time series P1, P2, P3, pitch contours of three melodic phrases. Acoustically, p1 and p2 are the occurrences of the same characteristic base phrase and both are musically dissimilar to p3. However, using the best performing variant of the similarity measure in [Gulati et al 2015a], the algorithm obtains a higher similarity score between the pairs (P1, P3 ) and (P2, P3 ) compared to the score between the pair (P1, P2 ). The same bias is found to apply to DTW distance. Therefore, if such problem is present, we must resort to using a complexity-invariant distance (CID) measure as proposed by [Batista et al 2011].
+
 
 
 
@@ -1031,7 +1038,13 @@ The \texttt{dist()} function can be implemented by search over a lookup table (f
 
 
 
-
+%a figure
+\begin{figure}
+ \centerline{\framebox{
+ \includegraphics[scale=0.4]{invar.png}}}
+ \caption{Pitch contours of three melodic phrases (p1, p2, p3). p1 and p2 are the occurrences of the same characteristic phrase and both are musically dissimilar to p3 (top pink). (adpated from [Gulati et al 2015b])}
+ \label{fig:invar}
+\end{figure}
 
 
 
@@ -1082,9 +1095,9 @@ In this experiment, model based clustering is performed with the \texttt{mclust}
 \subsection{F0 pattern mining using time-series mining techniques} \label{sec:speech mining}
 
 %lets talk about the applications and possible tasks for this area. example: 
-[Ratanamahatana et al 2004] shows that there are many data mining tasks that can be more efficiently solved as a time-series mining task, including video / image / handwriting retrieval, and text mining. In this section I discuss previous work that is closely related to F0 pattern mining (as in the current proposed project), including music information retrieval F0 melodic pattern mining, and speech intonation mining.
+[Ratanamahatana et al 2004] shows that there are many data mining tasks that can be more efficiently solved as a time-series mining task, including video / image / handwriting retrieval, and text mining. In this section I discuss previous work that is closely related to F0 pattern mining (which is at the center of the current proposed project), including music information retrieval F0 melodic pattern mining, and speech intonation mining.
 
-[Gulati et al 2014] applied exact motif (pattern) discovery to the F0 melodic patterns large collection of Indian music recordings by computing similarity between every possible subsequence pair obtained within an audio recording. This works exemplifies an integration of a variety of time-series mining techniques applied in different tasks crucial for F0 pattern mining in music (and in many cases, in speech) melodic pattern discovery, including distance measures, time-series representation, exact motif discovery[Mueen et al 2009], lower bounding in DTW distance computation [Keogh 2002] and early abandoning techniques for distance computation [Rakthanmanon et al 2013]. 
+[Gulati et al 2014] applied exact motif (pattern) discovery to the F0 melodic patterns large collection of Indian music recordings by computing similarity between every possible subsequence pair obtained within an audio recording. This work exemplifies an integration of a variety of time-series mining techniques applied in different tasks crucial for F0 pattern mining in music (and in many cases, in speech) melodic pattern discovery, including distance measures, time-series representation, exact motif discovery[Mueen et al 2009], lower bounding in DTW distance computation [Keogh 2002] and early abandoning techniques for distance computation [Rakthanmanon et al 2013]. 
 
 
 
@@ -1095,6 +1108,8 @@ Discovery of repeating structures in F0 contours is fundamental to the analysis,
 
 
 In [Gulati et al 2014], intra-recording pattern discovery is performed first through this state-of-the-art exact motif discovery algorithm. Top k pairs of motifs known as 'seed' patterns are stored for further evaluation. Subsequently the algorithm searches for their repetitions in the entire music collection. Similarity between melodic patterns are computed using dynamic time warping (DTW), where four different variants of the DTW cost function for rank refinement of the obtained results are evaluated. Over 13 trillion DTW distance computations are done for the entire dataset (360+ hours of music recordings). Due to the computational complexity of the task, different lower bounding and early abandoning techniques are applied during DTW distance computation. Several musically interesting relationships and meaningful patterns are discovered and evaluated by experts. 
+
+In the meantime, it is worth noting that in this task, the state-of-the-art \textit{exact} motif discovery algorithm by [Mueen et al 2009] did not work as well as one would have expected. Instead, the DTW distance measure (with lower bounding techniques to speed up the computation) outperforms the exact motif discovery algorithm. In this case, one observes once again, that the musical motifs that have many recurrences in the audio recording are in fact not exact copies of each other. Instead, with each occurrence of the motif, the motif mutates and varies a little bit, or it can be time stretched or compressed. Therefore, the best algorithm always needs to be chosen according to the needs of the specific tasks at hand. In speech F0 pattern mining, it would be worthwhile to experiment with both types of motif discovery algorithms and analyze the differences in results.
 
 As an outcome of this work, Gulati et al. developed an interactive search tool where users can query and search for the top k similar melodic patterns, which can be further inspected (audio) and analyzed\footnote{Available online at http://dunya.compmusic.upf.edu/motifdiscovery/.}. \figref{fig:netvis} shows a network visualization of the global and individual patterns found through through unsupervised learning, which allows users to interactively zoom in and out to explore the similarity structure at different levels\footnote{Available online at http://dunya.compmusic.upf.edu/pattern\_network/.}. Of course, the interpretation and further analysis obtained from such tools will subject to the help from expert domain knowledge in order to uncover truly meaningful patterns.
 
@@ -1197,7 +1212,7 @@ D1 & qTA & polynomial & BK\_NORM & \textit{F0\_Hertz}\\
 \section{Conclusion and Chapter outlines}
 In this document I have defined the goal and research questions for my doctoral thesis. The first goal of the thesis is to better understand sources of variability of Mandarin tones in spontaneous speech by mining speech intonation corpora using time-series mining techniques. The second goal is to improve the accuracy for unsupervised learning of tones through feature selection and context-dependent modeling. This is also informed by the results from the first goal. The concrete research questions are more detailed breakdowns of these two main goals, as stated in Section \ref{rq}.
 
-Following the definition of the goals and questions, I reviewed previous works from speech production and perception, speech prosody modeling, supervised and unsupervised learning, and time-series mining, and discussed important themes surrounding tone learning and recognition. At the core of these discussions is the question of what is the source of variability of tones in spontaneous speech, how can we identify these sources, and how can we exploit that knowledge to improve the modeling of tone recognition in various kinds of supervised and unsupervised frameworks. In the latter part of the document, I discuss works from F0 pattern mining in speech and music that employs time-series mining techniques.  Many of these aforementioned tasks would benefit from this approach, which has the advantage of being able to effectively and efficiently discover meaningful patterns from a large collection of speech F0 data with minimum supervision and manual labeling effort. For example, to better understand the context effects of tones from real data, we can perform an exact motif discovery search not only on single syllable unit contours, but also on longer units such as syllable bi-grams and tri-grams. 
+Following the definition of the goals and questions, I reviewed previous works from speech production and perception, speech prosody modeling, supervised and unsupervised learning, and time-series mining, and discussed important themes surrounding tone learning and recognition. At the core of these discussions is the question of what is the source of variability of tones in spontaneous speech, how can we identify these sources, and how can we exploit that knowledge to improve the modeling of tone recognition in various kinds of supervised and unsupervised frameworks. In the latter part of the document, I discuss works from F0 pattern mining in speech and music that employs time-series mining techniques.  Many of these aforementioned tasks would benefit from this approach, which has the advantage of being able to effectively and efficiently discover meaningful patterns from a large collection of speech F0 data with minimum supervision and manual labeling effort. For example, to better understand the context effects of tones from real data, we can perform a motif discovery search not only on single syllable unit contours, but also on longer units such as syllable bi-grams and tri-grams. 
 
 The tentative outline of the proposed doctoral thesis is as follows.
 
@@ -1211,82 +1226,165 @@ In Chapter 7, I experiment with both F0 based features and additional features t
  
 
 \section{References}\setlength\parindent{0pt}\setlength{\parskip}{\baselineskip}
-E. Chang et al., “Large vocabulary Mandarin speech recognition with different approaches in modeling
-tones”. in Proc. ICSLP, 2000, vol. 2, pp. 983–986.
 
-Patel, A. D., Xu,Y. and Wang, B.: The role of F0 variation in the intelligibility of Mandarin sentences. In Proceedings of Speech Prosody 2010, Chicago.(2010).
 
-Yi Xu, “Transimiting tone and intonation simultaneoulsy:the parallel encoding and target approximation (PENTA) model,” International Symposium on Tonal Aspects of Languages: With Emphasis on Tone Languages,pp. 215–220, 2004.
 
-Greg Kochanski and Chilin Shih, “Prosody modeling with soft templates,” Speech Communication,vol. 39, no. 3-4, pp. 311–352, 2003.
+[Batista et al 2011] G. E. Batista, X. Wang, and E. J Keogh. A complexity- invariant distance measure for time series. In SDM, vol- ume 11, pages 699–710, 2011.
 
-Xuejing Sun, The determination, analysis, and synthesis of fundamental frequency,Ph.D. thesis, Northwester University, 2002.
+[Belkin and Niyogi 2002] Mikhail Belkin and Partha Niyogi. Laplacian eigenmaps and spectral techniques for embedding and clustering. in Proceeding of NIPSÕ02, 2002.
 
-Jinsong Zhang and Keikichi Hirose, “Tone nucleus modeling for Chinese lexical tone recognition,” Speech Communication,vol. 42, pp. 447–466, 2005.
+[Belkin et al 2004] M. Belkin, P. Niyogi, and V. Sindhwani. 2004. Mani- fold regularization: a geometric framework for learn- ing from examples. Technical Report TR-2004-06, University of Chicago Computer Science.
+P.
 
-Gina-Anne Levow, “Context in multi-lingual tone and pitch accent recognition,” International Conference on Speech Communication and Technology,2005.
+[Chang et al 2000] E. Chang et al.,  Large vocabulary Mandarin speech recognition with different approaches in modeling tones. in Proc. ICSLP, 2000, vol. 2, pp. 983-986.
 
-Chao Wang and Stephanie Seneff, “Improving tone recognition by normalizing for coarticulation and intonation effects,” International Conference on Spoken Language Processing,2000.
+[Faloutsos et al 1994]C. Faloutsos, M. Ranganathan, and Y. Manolopulos. Fast Subsequence Matching in Time-Series Databases. SIGMOD Record. vol. 23. pp. 419-429. 1994.
 
-Yi Xu and D.H Whalen, “Information for mandarin tones in the amplitude contour and in brief segments,” Phonetica, vol. 49, pp. 25–47, 1992
+[Fischer and Poland 2004] I. Fischer and J. Poland. New methods for spectral clustering, Tech. Rep. ISDIA-12-04, IDSIA, 2004.
 
-I. Fischer and J. Poland, “New methods for spectral clustering,” Tech. Rep. ISDIA-12-04, IDSIA, 2004.
+[Fujisaki et al 1983] Fujisaki, H. Dynamic characteristics of voice fundamental frequency in speech and singing. In The production of speech, edited by P. F. MacNeilage (Springer- Verlag, New York) pp. 39-55, 1983.
 
-Mikhail Belkin and Partha Niyogi, “Laplacian eigenmaps and spectral techniques for embedding and clustering,” in Proceeding of NIPS’02, 2002.
+[Fujisaki 1988] Fujisaki, H. A note on the physiological and physical basis for the phrase and accent components in the voice fundamental frequency contour, In: Fujimura, O. (Ed.), Vocal Physiology: Voice Production, Mechanisms and Functions. Raven, New York, pp. 347-355, 1988.
 
-C.X.Xu, Y. Xu, and L.-S. Luo, “A pitch target approximation model for f0 contours in Mandarin,” in Proceedings of the 14th International Congress of Phonetic Sciences, 1999, pp. 2359–2362.
+[Ganguli et al 2015] Ganguli, K, Rastog, A, Pandit, V, Kantan, P, Rao, P. Efficient melodic query based audio search for Hindustani vocal compositions. Proceeding of the ISMIR 2015, Malaga, Spain.2015.
 
-Yi Xu and X. Sun, “Maximum speed of pitch change and how it may relate to speech,” Journal of the Acoustical Society of America, vol. 111, 2002.
+[Gauthier et al 2005] Bruno Gauthier, Rushen Shi, Yi Xu, and Robert Proulx, “Neural-network simulation of tonal categorization based on F0 velocity profiles,” Journal of the Acoustical Society of America, vol. 117, Pt. 2, pp. 2430, 2005.
 
-J. Lin, E. Keogh, S. Lonardi, and B. Chiu, “A symbolic representation of time series, with implications for streaming algorithms,” in Proc. of the 8th ACM SIGMOD workshop on Research issues in data mining and knowledge discovery, New York, USA, 2003, pp. 2–11.
+[Gauthier et al 2007]Gauthier, B., Shi, R. and Xu, Y. (2007). Learning phonetic categories by tracking movements. Cognition 103: 80-106. 
 
-A. Mueen, E. Keogh, Q. Zhu, S. Cash, and B. Westover, “Exact discovery of time series motifs,” in Proc. of SIAM Int. Con. on Data Mining (SDM), 2009, pp. 1–12.
+[Gulati et al 2014]S. Gulati, J. Serra, V. Ishwar and X. Serra, "Mining Melodic Patterns in Large Audio Collections of Indian Art Music." in Proceedings of International Conference on Signal Image Technology \& Internet Based Systems (SITIS) - Multimedia Information Retrieval and Applications, Marrakech, Morocco 2014.
 
-T. Rakthanmanon, B. Campana, A. Mueen, G. Batista, B. Westover, Q. Zhu, J. Zakaria, and E. Keogh, “Addressing big data time series: mining trillions of time series subsequences under dynamic time warping,” ACM Transactions on Knowledge Discovery from Data (TKDD), vol. 7, no. 3, pp. 10:1–10:31, Sep. 2013. 
+[Gulati et al 2015]S. Gulati, J. Serra and X. Serra, "An Evaluation of Methodologies for Melodic Similarity in Audio Recordings of Indian Art Music", in Proceedings of IEEE Int. Conf. on Acoustics, Speech, and Signal Processing (ICASSP) (In Press), Brisbane, Australia 2015.
 
-S. Gulati, J. Serrà, V. Ishwar and X. Serra, "Mining Melodic Patterns in Large Audio Collections of Indian Art Music." in Proceedings of International Conference on Signal Image Technology \& Internet Based Systems (SITIS) - Multimedia Information Retrieval and Applications, Marrakech, Morocco 2014.
+[Gulati et al 2015b] Improving melodic similarity in Indian art music using culture specific characteristics. Proceedings of the ISMIR 2015, Malaga, Spain, 2015.
 
-C. Faloutsos, M. Ranganathan, and Y. Manolopulos. Fast Subsequence Matching in Time-Series Databases. SIGMOD Record. vol. 23. pp. 419-429. 1994.
+[Hirst et al 2000] Hirst DJ, Di Cristo A and Espesser R. Levels of representation and levels of analysis for intonation. In: M Horne, editors. Prosody: Theory and Experiment, Dordrecht: Kluwer, 2000. 51-87.
 
-Zhang, S. Analyze linguistic tone patterns using time-series mining techniques. Workshop on Computational Phonology and Morphology (CompMorPhon15), Linguistic Summer Institute (Big Data), University of Chicago, July 11, 2015a.
 
-Zhang, S, Caro, R, Serra,X,. Study of the similarity between linguistic tones and melodic pitch contours in Beijing Opera singing. Proceedings of The 15th International Society for Music Information Retrieval (ISMIR) Conference, pp.345-348. Taiwan, October, 27-31 2014. 
+[Keogh 2002] Keogh, E. Exact indexing of dynamic time warping. In 28th International Conference on Very Large Data Bases. Hong Kong. pp 406-417, 2002.
 
-Zhang,S, Caro, R, Serra,X. Predicting pairwise pitch contour relations based on linguistic tone information in Beijing opera singing. Proceedings of the 16th International Society for Music Information Retrieval (ISMIR) conference, Malaga, Spain, October 26th-30th, 2015b.
+[Kochanski and Shih 2003] Greg Kochanski and Chilin Shih.  Prosody modeling with soft templates, Speech Communication,vol. 39, no. 3-4, pp. 311-352, 2003.
 
-Keogh, E. (2002). Exact indexing of dynamic time warping. In 28th International Conference on Very Large Data Bases. Hong Kong. pp 406-417. 
+[Ladd 1996] Ladd, R. D. Intonational Phonology. Cambridge University Press, 1996.
 
-S. Gulati, J. Serrà and X. Serra, "An Evaluation of Methodologies for Melodic Similarity in Audio Recordings of Indian Art Music", in Proceedings of IEEE Int. Conf. on Acoustics, Speech, and Signal Processing (ICASSP) (In Press), Brisbane, Australia 2015.
+[Levow 2005] Gina-Anne Levow,  Context in multi-lingual tone and pitch accent recognition. International Conference on Speech Communication and Technology,2005.
 
-Xu, Y., Lee, A., Prom-on, S. \& Liu, F. (in press). Explaining the PENTA model: A reply to Arvaniti and Ladd (2009). Phonology (in press).
 
-Xu, Y. and Prom-on, S. (2014). Toward invariant functional representations of variable surface fundamental frequency contours: Synthesizing speech melody via model-based stochastic learning. Speech Communication 57, 181-208.
+[Levow 2006a] Levow, G. Unsupervised learning of tone and pitch accent. Speech Prosody 2006, Dresden, Germany, May 2006. 
 
-Prom-on, S., Xu, Y. and Thipakorn, B. (2009). Modeling tone and intonation in Mandarin and English as a process of target approximation. Journal of the Acoustical Society of America 125: 405-424.
+[Levow 2006b] Levow, G. Unsupervised and Semi-supervised Learning of Tone and Pitch Accent ". HLT-NAACL 2006, p. 224-231. 
 
-Gauthier, B., Shi, R. and Xu, Y. (2007). Learning phonetic categories by tracking movements. Cognition 103: 80-106. 
+[Lin 2003] Jessica Lin, Eamonn Keogh, Stefano Lonardi, and Bill Chiu. 2003. A symbolic representation of time series, with implication for streaming algorithms. In Proceedings of the 8th ACM SIGMOD Workshop on Research Issues in Data Mining and Knowledge Discovery (DMKD '03). ACM, New York, NY, USA. Pages 2-11.
 
-Xu, Y. (1997). Contextual tonal variations in Mandarin. Journal of Phonetics 25: 61-83. 
+[Lin 2010] Chotirat Ann Ratanamahatana, Jessica Lin, Dimitrios Gunopulos, Eamonn Keogh, Michail Vlachos, and Gautam Das. 2010. Mining time series data. Data Mining and Knowledge Discovery Handbook 2010, 2nd Edition. Eds. Oded Maimon, Lior Rokach. Springer. Pages 1049-1077
 
-Xu, Y. (1994). Production and perception of coarticulated tones. Journal of the Acoustical Society of America 95: 2240-2253.
+[Lin et al 2007] Jessica Lin, Eamonn Keogh, Li Wei, and Stefano Lonardi. 2007. Experiencing SAX: a novel symbolic representation of time series. Data Mining and Knowledge Discovery, 15(2): 107-144. 
 
-Can Voice Quality help Mandarin Tone Recognition? by Dinoj Surendran and Gina-Anne Levow, Proceedings of ICASSP 2008. 
+[Lin et al 2003] J. Lin, E. Keogh, S. Lonardi, and B. Chiu. A symbolic representation of time series, with implications for streaming algorithms, in Proc. of the 8th ACM SIGMOD workshop on Research issues in data mining and knowledge discovery, New York, USA, 2003, pp. 2-11.
 
-Tone Recognition in Mandarin using Focus. Dinoj Surendran, Gina-Anne Levow, Yi Xu (Phonetics Department, UCL). Proceedings of the 9th European Conference of Speech Communication and Technology (Interspeech/ICSLP 2005) 
+[Liu et al 2006] Liu F, Surendran D and Xu Y. Classification of statement and question intonations in Mandarin In: Proceedings of Speech Prosody 2006, Dresden, Germany, 2006. PS5-25-0232.
 
-The functional load of tone in Mandarin is as high as that of vowels. Dinoj Surendran and Gina-Anne Levow. Proceedings of Speech Prosody 2004, Nara, Japan, pp. 99-102.
 
-Xu, Y., Xu, C. X., Sun. X. “On the temporal domain of focus”, Proc. Intl. Conf. Speech Prosody, Nara, Japan. 1:81–94, 2004.
+[Mixdorff 2000] Mixdorff, H., Fujisaki, H., Chen, G. P., Hu, Y., 2003. Towards the automatic extraction of Fujisaki model parameters for Mandarin. In: Proc. Eurospeech 2003, Geneva, pp. 873- 876.
 
-Xu, Y. “Effects of tone and focus on the formation and alignment of f0 contours”, J. Phonetics 27:55–105, 1999.
+[Moren and Zsiga 2006] Moren,B, and Zsiga, E. The lexical and post-lexical phonology of Thai tones. Natural language and linguistic theory 24:113-178, 2006.
 
-"Modeling Broad Context for Tone Recognition with Conditional Random Fields", Siwei Wang and Gina-Anne Levow, in Proceedings of Interspeech 2011, 2011.
+[Mueen et al 2009]A. Mueen, E. Keogh, Q. Zhu, S. Cash, and B. Westover. Exact discovery of time series motifs. in Proc. of SIAM Int. Con. on Data Mining (SDM), 2009, pp. 1-12.
 
-"Improving Tone Recognition with Combined Frequency and Amplitude Modelling", Siwei Wang and Gina-Anne Levow, Proceedings of Interspeech 2006, p. 2386-2389.
+[Patel and Xu 2010] Patel, A. D., Xu,Y. and Wang, B.: The role of F0 variation in the intelligibility of Mandarin sentences. In Proceedings of Speech Prosody 2010, Chicago.(2010).
 
-Unsupervised and Semi-supervised Learning of Tone and Pitch Accent ", Gina-Anne Levow, HLT-NAACL 2006, p. 224-231. 
+[Pierrehumbert 1980]Pierrehumbert, J. The phonology and phonetics of english intonation, Ph.D. dissertation, MIT, Cambridge, MA, 1980.
 
-Unsupervised learning of tone and pitch accent. Gina-Anne Levow, Speech Prosody 2006, Dresden, Germany, May 2006. 
+
+[Pierrehumbert 1981] Pierrehumbert, J. Synthesizing intonation, J. Acoust. Soc. Am. 70, 985-995, 1981.
+
+[Pierrehumbert and Beckman 1988] Pierrehumbert, J. and Beckman, M. Japanese Tone Structure. MIT Press. Cambridge, Mass, 1988.
+
+[Prom-on et al 2009] Prom-on, S., Xu, Y. and Thipakorn, B. (2009). Modeling tone and intonation in Mandarin and English as a process of target approximation. Journal of the Acoustical Society of America 125: 405-424.
+
+
+[Rakthanmanon et al 2012] Thanawin Rakthanmanon, Bilson Campana, Abdullah Mueen, Gustavo Batista2, Brandon Westover1, Qiang Zhu, Jesin Zakaria, Eamonn Keogh. Searching and Mining Trillions of Time Series Subsequences under Dynamic Time Warping. Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 2012.
+
+
+[Rakthanmanon et al 2013]T. Rakthanmanon, B. Campana, A. Mueen, G. Batista, B. Westover, Q. Zhu, J. Zakaria, and E. Keogh, Addressing big data time series: mining trillions of time series subsequences under dynamic time warping,Ó ACM Transactions on Knowledge Discovery from Data (TKDD), vol. 7, no. 3, pp. 10:1-10:31, Sep. 2013. 
+
+[Ramadoss and Wilson 2009] ] Ramadoss, D and Wilson, C (2009) Probabilistic Modeling of Tone Perception. Auditory Perception, Cognition and Action Meeting 2009, Boston, November 2009.
+
+[Raskinis and Kazlauskiene 2013] Ra?kinis, Gailius, Kazlauskien?, Asta.From speech corpus to intonation corpus: clustering phrase pitch contours of Lithuanian. Proceedings of the 19th Nordic Conference of Computational Linguistics (NODALIDA 2013).
+
+[Ratanamahatana et al 2004] Ratanamahatana, Ca, Keogh, E. Everything you know about dynamic time warping is wrong. Third Workshop on Mining Temporal and Sequential Data, 2004.
+
+[Shen 1990] Shen , X . S . (1990) Tonal coarticulation in Mandarin , Journal of Phonetics , 18 , 281–295.
+
+[Silverman et al 1992] Silverman, K., Beckman, M., Pitrelli, J., Ostendorf, M., Wightman, C., Price, P., Pierrehumbert, J., Hirschberg, J. (1992). Tobi: A standard for labelling english prosody, Proceedings of ICSLP 92, Banff, Alberta), pp. 867-870.
+
+[Sun 2002] Xuejing Sun, The determination, analysis, and synthesis of fundamental frequency,Ph.D. thesis, Northwester University, 2002.
+
+[Surendran et al 2004] Dinoj Surendran and Gina-Anne Levow. The functional load of tone in Mandarin is as high as that of vowels. Proceedings of Speech Prosody 2004, Nara, Japan, pp. 99-102.
+
+[Surendran et al 2005] Dinoj Surendran, Gina-Anne Levow, Yi Xu.Tone Recognition in Mandarin using Focus. Proceedings of the 9th European Conference of Speech Communication and Technology (Interspeech/ICSLP 2005). 
+
+[Surendran et al 2007] Surendran, D. Analysis and Automatic Recognition of Tones in Mandarin Chinese. Ph.D. Thesis, University of Chicago, December 2007.
+
+[Surendran et al 2008] by Dinoj Surendran and Gina-Anne Levow. Can Voice Quality help Mandarin Tone Recognition? Proceedings of ICASSP 2008. 
+
+[Surendran, Levow and Xu 2005] Dinoj Surendran, Gina-Anne Levow, Yi Xu.Tone Recognition in Mandarin using Focus. Proceedings of the 9th European Conference of Speech Communication and Technology (Interspeech/ICSLP 2005). 
+
+[Taylor 2000] Taylor, P. (2000). Analysis and synthesis of intonation using the tilt model, J. Acoust. Soc. Am. 107, 1697-1714.
+
+[Valero, Salamon and Gomez 2015] Valero-Mas, Jose J, Salamon, Justinj, Gómez, Emilia. Analyzing the influence of pitch quantization and note segmentation on singing voice alignment in the context of audio-based Query-by-Humming. Sound and Music Computing Conference, 2015.
+
+[Wang and Levow 2006] Siwei Wang and Gina-Anne Levow. "Improving Tone Recognition with Combined Frequency and Amplitude Modelling". Proceedings of Interspeech 2006, p. 2386-2389.
+
+[Wang and Levow 2011] Siwei Wang and Gina-Anne Levow."Modeling Broad Context for Tone Recognition with Conditional Random Fields". in Proceedings of Interspeech 2011, 2011.
+
+[Wang and Seneff 2000] Chao Wang and Stephanie Seneff, Improving tone recognition by normalizing for coarticulation and intonation effects, International Conference on Spoken Language Processing, 2000.
+
+[Wang and Xu 2011] Wang, Bei \& Yi Xu (2011). Differential prosodic encoding of topic and focus in sentence- initial position in Mandarin Chinese. JPh 39. 595–611.
+
+[Xu 1994]Xu, Y. (1994). Production and perception of coarticulated tones. Journal of the Acoustical Society of America 95: 2240-2253.
+
+[Xu 1997] Xu, Y. (1997). Contextual tonal variations in Mandarin. Journal of Phonetics 25: 61-83. 
+
+[Xu 1999] Xu, Y. Effects of tone and focus on the formation and alignment of F0 contours, J. Phonetics 27:55-105, 1999.
+
+[Xu 2001] Y. Xu, “Fundamental frequency peak delay in Man- darin,” Phonetica, vol. 58, pp. 26–52, 2001.
+
+[Xu 2004] Yi Xu. Transimiting tone and intonation simultaneoulsy:the parallel encoding and target approximation (PENTA) model. International Symposium on Tonal Aspects of Languages: With Emphasis on Tone Languages,pp. 215-220, 2004.
+
+[Xu 2005] Xu, Yi (2005). Speech melody as articulatorily implemented communicative functions. Speech Communication 46. 220–251.
+
+[Xu 2011]Xu, Yi (2011a). Speech prosody: A methodological review. Journal of Speech Sciences 1. 85– 115.
+
+[Xu and Sun 2002] Yi Xu and X. Sun,  Maximum speed of pitch change and how it may relate to speech,Ó Journal of the Acoustical Society of America, vol. 111, 2002.
+
+[Xu and Prom-on 2014] Xu, Y. and Prom-on, S. (2014). Toward invariant functional representations of variable surface fundamental frequency contours: Synthesizing speech melody via model-based stochastic learning. Speech Communication 57, 181-208.
+
+[Xu and Wang 1997, 2001]
+[Xu and Whalen 1992] Yi Xu and D.H Whalen. Information for mandarin tones in the amplitude contour and in brief segments. Phonetica, vol. 49, pp. 25-47, 1992
+
+[Xu et al 1999] C.X.Xu, Y. Xu, and L.-S. Luo,  A pitch target approximation model for F0 contours in Mandarin,Ó in Proceedings of the 14th International Congress of Phonetic Sciences, 1999, pp. 2359-2362.
+
+[Xu et al 2004] Xu, Y., Xu, C. X., Sun. X. On the temporal domain of focus, Proc. Intl. Conf. Speech Prosody, Nara, Japan. 1:81-94, 2004.
+
+[Xu et al in press] Xu, Y., Lee, A., Prom-on, S. \& Liu, F. (in press). Explaining the PENTA model: A reply to Arvaniti and Ladd (2009). Phonology (in press).
+
+[Yip 1980] Yip, M. The Tonal Phonology of Chinese. Ph.D. dissertation. MIT, 1980.
+
+[Yu 2011] Yu, K. The learnability of tones from the speech signal. PhD Dissertation, UCLA 2011.
+
+[Zhang et al 2014] Zhang, S, Caro, R, Serra,X,. Study of the similarity between linguistic tones and melodic pitch contours in Beijing Opera singing. Proceedings of The 15th International Society for Music Information Retrieval (ISMIR) Conference, pp.345-348. Taiwan, October, 27-31 2014. 
+
+[Zhang 2015a] Zhang, S. Analyze linguistic tone patterns using time-series mining techniques. Workshop on Computational Phonology and Morphology (CompMorPhon15), Linguistic Summer Institute (Big Data), University of Chicago, July 11, 2015a.
+
+[Zhang et al 2015b] Zhang,S, Caro, R, Serra,X. Predicting pairwise pitch contour relations based on linguistic tone information in Beijing opera singing. Proceedings of the 16th International Society for Music Information Retrieval (ISMIR) conference, Malaga, Spain, October 26th-30th, 2015b.
+
+[Zhang and Hirose 2004] Jinsong Zhang and Keikichi Hirose, “Tone nucleus modelling for chinese lexical tone recognition,” Speech Communication, vol. 42, pp. 447–466, 2005
+
+[Zhang, Hirose, and Nakamura 2005] Jinsong Zhang and Keikichi Hirose. Tone nucleus modeling for Chinese lexical tone recognition, Speech Communication,vol. 42, pp. 447-466, 2005.
+
+[Zsiga 2013] Zsiga, E. The Sounds of Language: An Introduction to Phonetics and Phonology. Wiley-Blackwell: 2013.
+
 
 
 \end{document}
